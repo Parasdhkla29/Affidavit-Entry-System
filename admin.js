@@ -384,105 +384,121 @@ function getSessionsForMonth(monthVal) {
 }
 
 async function downloadMonthlyZip() {
+  // ── Guard: JSZip must be loaded ───────────────────────
+  if (typeof JSZip === 'undefined') {
+    showAdminToast('JSZip library not loaded. Check your internet connection and refresh.', 'error');
+    return;
+  }
+
   const monthVal = $a('monthSelect').value;
-  if (!monthVal) return;
+  if (!monthVal) { showAdminToast('Please select a month first.', 'warning'); return; }
 
   const sessions = getSessionsForMonth(monthVal);
   if (!sessions.length) {
-    showAdminToast('No sessions found for selected month.', 'warning');
+    showAdminToast('No sessions found for the selected month.', 'warning');
     return;
   }
 
   const btn = $a('downloadZipBtn');
-  btn.disabled = true;
+  btn.disabled    = true;
+  btn.textContent = '⏳ Starting…';
 
-  // Human-readable month label e.g. "June 2026"
-  const [year, month] = monthVal.split('-');
-  const monthLabel = new Date(parseInt(year), parseInt(month) - 1, 1)
+  // Human-readable label e.g. "June_2026"
+  const [year, mon] = monthVal.split('-');
+  const monthLabel  = new Date(parseInt(year), parseInt(mon) - 1, 1)
     .toLocaleString('en-IN', { month: 'long', year: 'numeric' });
   const safeLabel = monthLabel.replace(/\s+/g, '_');
 
   try {
-    const zip     = new JSZip();
-    const folder  = zip.folder(`Affidavit_${safeLabel}`);
+    const zip    = new JSZip();
+    const folder = zip.folder(`Affidavit_${safeLabel}`);
 
-    // ── 1. Fetch all entries for CSV ──────────────────────
+    // ── Step 1: Load entries from Supabase ────────────────
     btn.textContent = '⏳ Loading entries…';
-    const sessionIds = sessions.map(s => s.id);
-    const { data: allEntries } = await db
+    const ids = sessions.map(s => s.id);
+
+    const { data: entries, error: entErr } = await db
       .from('affidavit_entries')
       .select('*')
-      .in('session_id', sessionIds)
-      .order('session_id,serial_number');
+      .in('session_id', ids)
+      .order('serial_number', { ascending: true });
 
-    // ── 2. Build summary CSV ──────────────────────────────
-    const csvLines = [
-      'SR,File Name,Date,First Entry,Second Entry,Total Entries,Status'
-    ];
-    sessions.forEach((s, i) => {
-      csvLines.push([
-        i + 1,
-        s.file_name        || '',
-        formatDate(s.created_at),
-        s.first_entry_name  || '',
-        s.second_entry_name || '',
-        s.total_entries     || 0,
-        s.status            || 'SAVED'
-      ].map(v => `"${String(v).replace(/"/g, '""')}"`).join(','));
-    });
-    folder.file('summary.csv', csvLines.join('\r\n'));
+    if (entErr) console.warn('Entries fetch warning:', entErr.message);
 
-    // ── 3. Detailed entries CSV ───────────────────────────
-    const entryLines = [
-      'Session File,SR,Name,Aadhar Number,Date'
-    ];
-    (allEntries || []).forEach(e => {
+    // ── Step 2: summary.csv ───────────────────────────────
+    const csvHeader = ['SR', 'File Name', 'Date', 'First Entry', 'Second Entry', 'Total Entries', 'Status'];
+    const csvRows   = sessions.map((s, i) => [
+      i + 1,
+      s.file_name         || '',
+      formatDate(s.created_at),
+      s.first_entry_name  || '',
+      s.second_entry_name || '',
+      s.total_entries     || 0,
+      s.status            || 'SAVED',
+    ].map(v => `"${String(v).replace(/"/g, '""')}"`).join(','));
+
+    folder.file('summary.csv', [csvHeader.join(','), ...csvRows].join('\r\n'));
+
+    // ── Step 3: entries_detail.csv ────────────────────────
+    const detHeader = ['Session File', 'SR', 'Name', 'Aadhar Number', 'Date'];
+    const detRows   = (entries || []).map(e => {
       const sess = sessions.find(s => s.id === e.session_id);
       const raw  = e.aadhaar_number || '';
       const fmt  = raw.replace(/(\d{4})(\d{4})(\d{4})/, '$1 $2 $3');
-      entryLines.push([
-        sess?.file_name      || '',
+      return [
+        sess?.file_name || '',
         e.serial_number,
-        e.name               || '',
-        fmt                  || '',
-        formatDate(sess?.created_at)
-      ].map(v => `"${String(v).replace(/"/g, '""')}"`).join(','));
+        e.name          || '',
+        fmt,
+        formatDate(sess?.created_at),
+      ].map(v => `"${String(v).replace(/"/g, '""')}"`).join(',');
     });
-    folder.file('entries_detail.csv', entryLines.join('\r\n'));
 
-    // ── 4. Fetch PDFs ─────────────────────────────────────
-    let done = 0;
-    for (const s of sessions) {
-      btn.textContent = `⏳ Downloading PDFs ${done}/${sessions.length}…`;
-      if (!s.pdf_url) { done++; continue; }
+    folder.file('entries_detail.csv', [detHeader.join(','), ...detRows].join('\r\n'));
+
+    // ── Step 4: Fetch each PDF ────────────────────────────
+    let pdfCount = 0;
+    for (let i = 0; i < sessions.length; i++) {
+      const s = sessions[i];
+      btn.textContent = `⏳ PDF ${i + 1} / ${sessions.length}…`;
+
+      if (!s.pdf_url) continue;
+
       try {
-        const res  = await fetch(s.pdf_url);
+        const res = await fetch(s.pdf_url, { mode: 'cors' });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const blob = await res.blob();
-        const name = s.file_name || `session_${s.id}.pdf`;
-        folder.file(name, blob);
-      } catch (e) {
-        console.warn('PDF fetch failed for', s.file_name, e);
+        folder.file(s.file_name || `session_${i + 1}.pdf`, blob);
+        pdfCount++;
+      } catch (fetchErr) {
+        console.warn(`Could not fetch PDF "${s.file_name}":`, fetchErr.message);
+        // Add a placeholder text file so user knows which PDF was missing
+        folder.file(`MISSING_${s.file_name || `session_${i + 1}`}.txt`,
+          `Could not download: ${s.pdf_url}\nError: ${fetchErr.message}`);
       }
-      done++;
     }
 
-    // ── 5. Generate and trigger download ──────────────────
+    // ── Step 5: Compress and download ────────────────────
     btn.textContent = '⏳ Compressing…';
-    const zipBlob = await zip.generateAsync({ type: 'blob', compression: 'DEFLATE' });
-    const url     = URL.createObjectURL(zipBlob);
-    const a       = document.createElement('a');
-    a.href        = url;
-    a.download    = `Affidavit_${safeLabel}.zip`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    setTimeout(() => URL.revokeObjectURL(url), 10000);
+    const zipBlob = await zip.generateAsync({ type: 'blob', compression: 'DEFLATE', compressionOptions: { level: 6 } });
 
-    showAdminToast(`ZIP downloaded — ${done} PDFs + 2 CSV files for ${monthLabel}.`, 'success');
+    const url  = URL.createObjectURL(zipBlob);
+    const link = document.createElement('a');
+    link.href     = url;
+    link.download = `Affidavit_${safeLabel}.zip`;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 15000);
+
+    showAdminToast(
+      `✅ ZIP ready — ${pdfCount} PDF${pdfCount !== 1 ? 's' : ''} + 2 CSV files for ${monthLabel}.`,
+      'success'
+    );
 
   } catch (err) {
-    console.error('ZIP export error:', err);
-    showAdminToast('Export failed: ' + err.message, 'error');
+    console.error('ZIP export failed:', err);
+    showAdminToast('Export failed: ' + (err.message || 'Unknown error'), 'error');
   } finally {
     btn.disabled    = false;
     btn.textContent = '⬇ Download ZIP';
