@@ -8,6 +8,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 </head>
 <body class="admin-page">
 
@@ -70,6 +71,26 @@
       <div class="stat-card">
         <div class="stat-num" id="statEntries">—</div>
         <div class="stat-label">Total Entries Recorded</div>
+      </div>
+    </div>
+
+    <!-- ── Monthly Export ──────────────────────────────── -->
+    <div class="monthly-export-card">
+      <div class="me-left">
+        <div class="me-icon">📦</div>
+        <div>
+          <h3 class="me-title">Monthly Export</h3>
+          <p class="me-sub">Download all PDFs + entry summary for a selected month as a ZIP file</p>
+        </div>
+      </div>
+      <div class="me-controls">
+        <input type="month" id="monthSelect" onchange="onMonthSelect()" title="Select month">
+        <div id="monthPreview" class="month-preview hidden">
+          <span id="monthCount">0</span> sessions
+        </div>
+        <button id="downloadZipBtn" class="btn-zip" onclick="downloadMonthlyZip()" disabled>
+          ⬇ Download ZIP
+        </button>
       </div>
     </div>
 

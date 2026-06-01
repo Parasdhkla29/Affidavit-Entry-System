@@ -351,6 +351,145 @@ async function deleteSession(sessionId, pdfPath, photoPath) {
 }
 
 /* =====================================================================
+   MONTHLY EXPORT
+   ===================================================================== */
+function onMonthSelect() {
+  const val = $a('monthSelect').value; // "2026-06"
+  const btn  = $a('downloadZipBtn');
+  const prev = $a('monthPreview');
+
+  if (!val) {
+    btn.disabled = true;
+    prev.classList.add('hidden');
+    return;
+  }
+
+  // Count sessions for selected month from already-loaded data
+  const sessions = getSessionsForMonth(val);
+  $a('monthCount').textContent = sessions.length;
+  prev.classList.remove('hidden');
+
+  btn.disabled = sessions.length === 0;
+}
+
+function getSessionsForMonth(monthVal) {
+  // monthVal = "YYYY-MM"
+  return allSessions.filter(s => {
+    if (!s.created_at) return false;
+    const d = new Date(s.created_at);
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    return `${y}-${m}` === monthVal;
+  });
+}
+
+async function downloadMonthlyZip() {
+  const monthVal = $a('monthSelect').value;
+  if (!monthVal) return;
+
+  const sessions = getSessionsForMonth(monthVal);
+  if (!sessions.length) {
+    showAdminToast('No sessions found for selected month.', 'warning');
+    return;
+  }
+
+  const btn = $a('downloadZipBtn');
+  btn.disabled = true;
+
+  // Human-readable month label e.g. "June 2026"
+  const [year, month] = monthVal.split('-');
+  const monthLabel = new Date(parseInt(year), parseInt(month) - 1, 1)
+    .toLocaleString('en-IN', { month: 'long', year: 'numeric' });
+  const safeLabel = monthLabel.replace(/\s+/g, '_');
+
+  try {
+    const zip     = new JSZip();
+    const folder  = zip.folder(`Affidavit_${safeLabel}`);
+
+    // ── 1. Fetch all entries for CSV ──────────────────────
+    btn.textContent = '⏳ Loading entries…';
+    const sessionIds = sessions.map(s => s.id);
+    const { data: allEntries } = await db
+      .from('affidavit_entries')
+      .select('*')
+      .in('session_id', sessionIds)
+      .order('session_id,serial_number');
+
+    // ── 2. Build summary CSV ──────────────────────────────
+    const csvLines = [
+      'SR,File Name,Date,First Entry,Second Entry,Total Entries,Status'
+    ];
+    sessions.forEach((s, i) => {
+      csvLines.push([
+        i + 1,
+        s.file_name        || '',
+        formatDate(s.created_at),
+        s.first_entry_name  || '',
+        s.second_entry_name || '',
+        s.total_entries     || 0,
+        s.status            || 'SAVED'
+      ].map(v => `"${String(v).replace(/"/g, '""')}"`).join(','));
+    });
+    folder.file('summary.csv', csvLines.join('\r\n'));
+
+    // ── 3. Detailed entries CSV ───────────────────────────
+    const entryLines = [
+      'Session File,SR,Name,Aadhar Number,Date'
+    ];
+    (allEntries || []).forEach(e => {
+      const sess = sessions.find(s => s.id === e.session_id);
+      const raw  = e.aadhaar_number || '';
+      const fmt  = raw.replace(/(\d{4})(\d{4})(\d{4})/, '$1 $2 $3');
+      entryLines.push([
+        sess?.file_name      || '',
+        e.serial_number,
+        e.name               || '',
+        fmt                  || '',
+        formatDate(sess?.created_at)
+      ].map(v => `"${String(v).replace(/"/g, '""')}"`).join(','));
+    });
+    folder.file('entries_detail.csv', entryLines.join('\r\n'));
+
+    // ── 4. Fetch PDFs ─────────────────────────────────────
+    let done = 0;
+    for (const s of sessions) {
+      btn.textContent = `⏳ Downloading PDFs ${done}/${sessions.length}…`;
+      if (!s.pdf_url) { done++; continue; }
+      try {
+        const res  = await fetch(s.pdf_url);
+        const blob = await res.blob();
+        const name = s.file_name || `session_${s.id}.pdf`;
+        folder.file(name, blob);
+      } catch (e) {
+        console.warn('PDF fetch failed for', s.file_name, e);
+      }
+      done++;
+    }
+
+    // ── 5. Generate and trigger download ──────────────────
+    btn.textContent = '⏳ Compressing…';
+    const zipBlob = await zip.generateAsync({ type: 'blob', compression: 'DEFLATE' });
+    const url     = URL.createObjectURL(zipBlob);
+    const a       = document.createElement('a');
+    a.href        = url;
+    a.download    = `Affidavit_${safeLabel}.zip`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(url), 10000);
+
+    showAdminToast(`ZIP downloaded — ${done} PDFs + 2 CSV files for ${monthLabel}.`, 'success');
+
+  } catch (err) {
+    console.error('ZIP export error:', err);
+    showAdminToast('Export failed: ' + err.message, 'error');
+  } finally {
+    btn.disabled    = false;
+    btn.textContent = '⬇ Download ZIP';
+  }
+}
+
+/* =====================================================================
    HELPERS
    ===================================================================== */
 function formatDate(iso) {
