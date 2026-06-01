@@ -744,6 +744,10 @@ async function handlePrint() {
    ===================================================================== */
 async function saveToSupabase(pdfBlob, fileName) {
   try {
+    // Always fetch the live authenticated user — never rely on stale state
+    const { data: { user: liveUser } } = await db.auth.getUser();
+    if (!liveUser) throw new Error('Not logged in. Please sign in and try again.');
+
     const ts        = Date.now();
     const pdfPath   = `sessions/${ts}_${fileName}`;
     const photoName = fileName.replace(/\.pdf$/i, '') + '_photo.jpg';
@@ -781,8 +785,8 @@ async function saveToSupabase(pdfBlob, fileName) {
         second_entry_name: persons[1]?.name  || '',
         total_entries:     persons.length,
         status:            'SAVED',
-        operator_name:     resolveUsername(state.currentUser?.email),
-        user_id:           state.currentUser?.id || null,
+        operator_name:     resolveUsername(liveUser.email),
+        user_id:           liveUser.id,
       })
       .select()
       .single();
