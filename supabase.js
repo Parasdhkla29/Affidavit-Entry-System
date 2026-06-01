@@ -67,15 +67,15 @@ const SUPABASE_URL      = 'https://cmarvjdhcvlqxjodgiyj.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNtYXJ2amRoY3ZscXhqb2RnaXlqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAzMDkwMjMsImV4cCI6MjA5NTg4NTAyM30.XLGAK8V6plaJptUAVqucQR4BXcdp8H8JoH7Zn3RCuw0';
 
 /*
- * ADMIN USERNAME MAP
- * Add short usernames here that map to the full Supabase Auth email.
- * Usernames are case-insensitive.
- * To add more admins: 'newname': 'their@email.com'
+ * ADMIN CREDENTIALS
+ * Add users here — username (uppercase) : password
+ * To add a new user:  'RAJAT': 'rajat123'
+ * To change password: update the value on the right.
+ * Usernames are automatically uppercased before checking.
  */
-const ADMIN_USERNAMES = {
-  'admin':  'work.parasdhakla@gmail.com',
-  'paras':  'work.parasdhakla@gmail.com',
-  'saral':  'work.parasdhakla@gmail.com',
+const ADMIN_CREDENTIALS = {
+  'ADMIN': 'saral@2024',
+  'PARAS': 'saral@2024',
 };
 
 const db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);

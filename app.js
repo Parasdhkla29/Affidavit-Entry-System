@@ -22,63 +22,39 @@ const aadhaarInput = () => $('aadhaarInput');
    WELCOME — LOGIN + TRANSITION
    ===================================================================== */
 
-// Check if already logged in when page loads
-async function checkExistingSession() {
-  const { data: { user } } = await db.auth.getUser();
-  if (user) {
-    state.currentUser = user;
-    showWelcomeLoggedIn(user);
+// Restore session from sessionStorage on page load
+function checkExistingSession() {
+  const saved = sessionStorage.getItem('operatorName');
+  if (saved && ADMIN_CREDENTIALS[saved] !== undefined) {
+    state.currentUser = { username: saved };
+    showWelcomeLoggedIn(saved);
   }
 }
 
-async function loginAndStart() {
-  const rawInput = $('welcomeUsername').value.trim().toLowerCase();
+function loginAndStart() {
+  const username = $('welcomeUsername').value.trim().toUpperCase();
   const password = $('welcomePassword').value;
 
-  if (!rawInput || !password) {
+  if (!username || !password) {
     showWelcomeError('Please enter your username and password.');
     return;
   }
 
-  // Resolve username → email using the ADMIN_USERNAMES map from supabase.js
-  const email = rawInput.includes('@')
-    ? rawInput
-    : (typeof ADMIN_USERNAMES !== 'undefined' ? ADMIN_USERNAMES[rawInput] : null);
-
-  if (!email) {
-    showWelcomeError('Username not recognised.');
+  if (ADMIN_CREDENTIALS[username] !== password) {
+    showWelcomeError('Incorrect username or password.');
     return;
   }
 
-  const btn = $('welcomeLoginBtn');
-  btn.disabled    = true;
-  btn.textContent = 'Signing in…';
+  sessionStorage.setItem('operatorName', username);
+  state.currentUser = { username };
   hideWelcomeError();
-
-  const { data, error } = await db.auth.signInWithPassword({ email, password });
-
-  if (error) {
-    showWelcomeError('Login failed: ' + (error.message || 'Check your password.'));
-    btn.disabled    = false;
-    btn.innerHTML   = '<span>🔐</span> Sign In & Start';
-    return;
-  }
-
-  state.currentUser = data.user;
-  showWelcomeLoggedIn(data.user);
+  showWelcomeLoggedIn(username);
 }
 
-function showWelcomeLoggedIn(user) {
-  // Derive display name from email via ADMIN_USERNAMES reverse lookup
-  let displayName = user.email;
-  if (typeof ADMIN_USERNAMES !== 'undefined') {
-    const match = Object.entries(ADMIN_USERNAMES).find(([, v]) => v === user.email);
-    if (match) displayName = match[0].charAt(0).toUpperCase() + match[0].slice(1);
-  }
-
+function showWelcomeLoggedIn(username) {
   $('welcomeLoginSection').classList.add('hidden');
   $('welcomeLoggedIn').classList.remove('hidden');
-  $('welcomeUserLabel').textContent = displayName;
+  $('welcomeUserLabel').textContent = username;
 }
 
 function showWelcomeError(msg) {
@@ -88,16 +64,16 @@ function showWelcomeError(msg) {
 }
 function hideWelcomeError() { $('welcomeError').classList.add('hidden'); }
 
-async function signOutMain() {
-  await db.auth.signOut();
+function signOutMain() {
+  sessionStorage.removeItem('operatorName');
   state.currentUser = null;
-  // Return to welcome / login
+
   $('welcomeLoggedIn').classList.add('hidden');
   $('welcomeLoginSection').classList.remove('hidden');
   $('welcomePassword').value = '';
+  $('welcomeUsername').value = '';
   hideWelcomeError();
 
-  // If already in app, go back to welcome screen
   if (!$('mainApp').classList.contains('hidden')) {
     $('mainApp').classList.add('hidden');
     const ws = $('welcomeScreen');
@@ -105,7 +81,6 @@ async function signOutMain() {
     stopCamera();
   }
 
-  // Hide header user badge
   $('headerUserBadge').classList.add('hidden');
   $('headerLogoutBtn').classList.add('hidden');
 }
@@ -119,15 +94,9 @@ function startApp() {
     app.classList.remove('hidden');
     app.classList.add('fade-in');
 
-    // Show logged-in user in header
     if (state.currentUser) {
-      let displayName = state.currentUser.email;
-      if (typeof ADMIN_USERNAMES !== 'undefined') {
-        const match = Object.entries(ADMIN_USERNAMES).find(([, v]) => v === state.currentUser.email);
-        if (match) displayName = match[0].charAt(0).toUpperCase() + match[0].slice(1);
-      }
       const badge = $('headerUserBadge');
-      badge.textContent = '👤 ' + displayName;
+      badge.textContent = '👤 ' + state.currentUser.username;
       badge.classList.remove('hidden');
       $('headerLogoutBtn').classList.remove('hidden');
     }
@@ -797,7 +766,8 @@ async function saveToSupabase(pdfBlob, fileName) {
         second_entry_name: persons[1]?.name  || '',
         total_entries:     persons.length,
         status:            'SAVED',
-        user_id:           state.currentUser?.id || null,
+        operator_name:     state.currentUser?.username || 'ADMIN',
+        user_id:           null,
       })
       .select()
       .single();

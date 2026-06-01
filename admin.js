@@ -10,37 +10,23 @@ let searchTimer   = null;
 /* =====================================================================
    INIT
    ===================================================================== */
-document.addEventListener('DOMContentLoaded', async () => {
-  // Check existing session
-  const { data: { user } } = await db.auth.getUser();
-  if (user) {
-    showDashboard();
+document.addEventListener('DOMContentLoaded', () => {
+  // Check if already logged in via sessionStorage
+  const saved = sessionStorage.getItem('operatorName');
+  if (saved && ADMIN_CREDENTIALS[saved] !== undefined) {
+    showDashboard(saved);
     loadSessions();
   } else {
     showLoginScreen();
   }
 
-  // Allow Enter key on login form
-  $a('loginPassword').addEventListener('keydown', e => {
-    if (e.key === 'Enter') handleLogin();
-  });
-  $a('loginEmail').addEventListener('keydown', e => {
-    if (e.key === 'Enter') $a('loginPassword').focus();
-  });
-
-  // Close modal on overlay click
-  $a('sessionModal').addEventListener('click', e => {
-    if (e.target === $a('sessionModal')) closeModal();
-  });
-});
-
-/* ── Auth state listener ────────────────────────────────────────────── */
-db.auth.onAuthStateChange((event, session) => {
-  if (event === 'SIGNED_OUT') showLoginScreen();
+  $a('loginPassword').addEventListener('keydown', e => { if (e.key === 'Enter') handleLogin(); });
+  $a('loginEmail').addEventListener('keydown',    e => { if (e.key === 'Enter') $a('loginPassword').focus(); });
+  $a('sessionModal').addEventListener('click',    e => { if (e.target === $a('sessionModal')) closeModal(); });
 });
 
 /* =====================================================================
-   AUTH
+   AUTH  — simple credential check, no Supabase Auth
    ===================================================================== */
 function showLoginScreen() {
   $a('loginScreen').classList.remove('hidden');
@@ -49,55 +35,39 @@ function showLoginScreen() {
   $a('adminDashboard').style.display = 'none';
 }
 
-function showDashboard() {
+function showDashboard(username) {
+  // Show who is logged in
+  const brand = $a('adminDashboard').querySelector('.admin-brand h1');
+  if (brand && username) brand.textContent = `Admin Portal — ${username}`;
+
   $a('loginScreen').classList.add('hidden');
   $a('loginScreen').style.display = 'none';
   $a('adminDashboard').classList.remove('hidden');
   $a('adminDashboard').style.display = 'flex';
 }
 
-async function handleLogin() {
-  const rawInput = $a('loginEmail').value.trim().toLowerCase();
+function handleLogin() {
+  const username = $a('loginEmail').value.trim().toUpperCase();
   const password = $a('loginPassword').value;
 
-  if (!rawInput || !password) {
+  if (!username || !password) {
     showLoginError('Please enter your username and password.');
     return;
   }
 
-  // Resolve short username → full email via ADMIN_USERNAMES map.
-  // If the input already contains '@' treat it as a direct email (fallback).
-  const email = rawInput.includes('@')
-    ? rawInput
-    : (ADMIN_USERNAMES[rawInput] || null);
-
-  if (!email) {
-    showLoginError('Username not recognised. Please check and try again.');
-    $a('loginBtn').disabled   = false;
-    $a('loginBtn').textContent = 'Sign In';
+  if (ADMIN_CREDENTIALS[username] !== password) {
+    showLoginError('Incorrect username or password.');
     return;
   }
 
-  const btn = $a('loginBtn');
-  btn.disabled     = true;
-  btn.textContent  = 'Signing in…';
+  sessionStorage.setItem('operatorName', username);
   $a('loginError').classList.add('hidden');
-
-  const { error } = await db.auth.signInWithPassword({ email, password });
-
-  if (error) {
-    showLoginError(error.message || 'Login failed. Check your credentials.');
-    btn.disabled    = false;
-    btn.textContent = 'Sign In';
-    return;
-  }
-
-  showDashboard();
+  showDashboard(username);
   loadSessions();
 }
 
-async function handleLogout() {
-  await db.auth.signOut();
+function handleLogout() {
+  sessionStorage.removeItem('operatorName');
   showLoginScreen();
   allSessions = [];
 }
@@ -116,9 +86,12 @@ async function loadSessions() {
     <tr><td colspan="8" class="admin-loading">Loading records…</td></tr>`;
   $a('tableFooter').textContent = 'Loading…';
 
+  const operator = sessionStorage.getItem('operatorName') || '';
+
   const { data, error } = await db
     .from('affidavit_sessions')
     .select('*')
+    .eq('operator_name', operator)
     .order('created_at', { ascending: false })
     .limit(200);
 
