@@ -84,6 +84,7 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
  */
 const ADMIN_USERNAMES = {
   'ADMIN':  'admin@saral.local',
+  'PARAS':  'paras@saral.local',
   'TEHSIL': 'tehsil@saral.local',
   'RINKU':  'rinku@saral.local',
 };
