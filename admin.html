@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Portal — Affidavit Entry System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+</head>
+<body class="admin-page">
+
+<!-- ══════════════════════════════════════════════════════
+     LOGIN SCREEN
+══════════════════════════════════════════════════════ -->
+<div id="loginScreen" class="admin-login-wrap hidden">
+  <div class="admin-login-card">
+    <div class="login-logo">🔐</div>
+    <h2>Admin Portal</h2>
+    <p class="login-sub">Sign in to view and manage affidavit records</p>
+
+    <div class="form-group">
+      <label for="loginEmail">Email Address</label>
+      <input type="email" id="loginEmail" placeholder="admin@example.com" autocomplete="email">
+    </div>
+    <div class="form-group">
+      <label for="loginPassword">Password</label>
+      <input type="password" id="loginPassword" placeholder="Enter password" autocomplete="current-password">
+    </div>
+
+    <div id="loginError" class="login-error hidden"></div>
+
+    <button class="btn-login" id="loginBtn" onclick="handleLogin()">Sign In</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     ADMIN DASHBOARD
+══════════════════════════════════════════════════════ -->
+<div id="adminDashboard" class="hidden" style="display:flex;flex-direction:column;min-height:100vh;">
+
+  <!-- Header -->
+  <header class="admin-header">
+    <div class="admin-brand">
+      <div class="header-logo" style="width:36px;height:36px;border-radius:9px;background:linear-gradient(135deg,#6366f1,#3b82f6);display:flex;align-items:center;justify-content:center;font-size:18px;">📋</div>
+      <div>
+        <h1>Admin Portal</h1>
+      </div>
+      <span>Saral Centre Nilokheri</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;">
+      <a href="index.html" style="font-size:12px;color:var(--text-2);text-decoration:none;padding:8px 14px;border:1px solid var(--card-border);border-radius:8px;">← Main App</a>
+      <button class="btn-logout" onclick="handleLogout()">🚪 Sign Out</button>
+    </div>
+  </header>
+
+  <div class="admin-body">
+
+    <!-- Stats row -->
+    <div class="admin-stats" id="statsRow">
+      <div class="stat-card">
+        <div class="stat-num" id="statTotal">—</div>
+        <div class="stat-label">Total Sessions</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="statToday">—</div>
+        <div class="stat-label">Today's Sessions</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="statEntries">—</div>
+        <div class="stat-label">Total Entries Recorded</div>
+      </div>
+    </div>
+
+    <!-- Toolbar -->
+    <div class="admin-toolbar">
+
+      <!-- Search -->
+      <div class="search-wrap">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="searchInput" placeholder="Search by name or file name…"
+          oninput="onFilterChange()" autocomplete="off">
+      </div>
+
+      <!-- Date filter -->
+      <div class="date-filter-wrap">
+        <span class="date-icon">📅</span>
+        <input type="date" id="dateFilter" onchange="onFilterChange()" title="Filter by date">
+        <button class="btn-today" onclick="setTodayFilter()">Today</button>
+      </div>
+
+      <!-- Clear filters (shown only when a filter is active) -->
+      <button id="clearFiltersBtn" class="btn-clear-filter hidden" onclick="clearFilters()">
+        ✕ Clear Filters
+      </button>
+
+      <button class="btn-refresh" onclick="loadSessions()">🔄 Refresh</button>
+    </div>
+
+    <!-- Table -->
+    <div class="admin-table-card">
+      <div class="admin-table-wrap">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>File Name</th>
+              <th>Date / Time</th>
+              <th>First Entry</th>
+              <th>Second Entry</th>
+              <th style="text-align:center;">Entries</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="sessionsBody">
+            <tr>
+              <td colspan="8" style="text-align:center;padding:50px;color:var(--text-3);">Loading…</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="admin-table-footer">
+        <span id="tableFooter">Loading records…</span>
+      </div>
+    </div>
+
+  </div><!-- /admin-body -->
+</div><!-- /adminDashboard -->
+
+<!-- ══════════════════════════════════════════════════════
+     SESSION DETAIL MODAL
+══════════════════════════════════════════════════════ -->
+<div id="sessionModal" class="modal-overlay hidden">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3 id="modalTitle">Session Details</h3>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body" id="modalBody">
+      <!-- Rendered by JS -->
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="adminToast" class="toast"></div>
+
+<script src="supabase.js"></script>
+<script src="admin.js"></script>
+</body>
+</html>

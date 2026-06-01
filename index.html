@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Affidavit Entry System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════
+     WELCOME SCREEN
+══════════════════════════════════════════════════════ -->
+<div id="welcomeScreen" class="welcome-screen">
+  <div class="welcome-card">
+    <div class="welcome-badge">
+      <span>🏛️</span> Saral Centre Nilokheri
+    </div>
+    <div class="welcome-icon-wrap">📋</div>
+    <h1>Welcome to<br>Affidavit Entry System</h1>
+    <p>Capture photo, record entries, and print the final affidavit sheet quickly and securely.</p>
+    <button class="btn-start" onclick="startApp()">
+      <span>▶</span> Start New Session
+    </button>
+    <div class="welcome-footer">
+      <span>Camera Capture</span>
+      <span>Aadhaar Records</span>
+      <span>Instant PDF Print</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     MAIN APP
+══════════════════════════════════════════════════════ -->
+<div id="mainApp" class="app-container hidden">
+
+  <!-- Header -->
+  <header class="app-header">
+    <div class="header-brand">
+      <div class="header-logo">📋</div>
+      <div>
+        <h1>AFFIDAVIT ENTRY SYSTEM</h1>
+        <p>Saral Centre Nilokheri</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <a href="admin.html" class="btn-admin" target="_blank">🔐 Admin Portal</a>
+    </div>
+  </header>
+
+  <!-- Dashboard -->
+  <div class="dashboard-grid">
+
+    <!-- ── COLUMN 1: Create Entry ──────────────────────────── -->
+    <div class="card entry-panel">
+      <div class="card-header">
+        <div class="card-icon">👤</div>
+        <div>
+          <h3>Entry System</h3>
+          <p>Create a new affidavit entry</p>
+        </div>
+      </div>
+
+      <!-- Photo status badge -->
+      <div>
+        <span id="photoBadge" class="photo-badge waiting">📷 Capture photo to begin</span>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- Name -->
+      <div class="form-group">
+        <label for="nameInput">Enter Name</label>
+        <div class="input-wrap">
+          <input type="text" id="nameInput" placeholder="Enter full name" autocomplete="off" oninput="onNameInput()">
+        </div>
+      </div>
+
+      <!-- Aadhaar -->
+      <div class="form-group">
+        <label for="aadhaarInput">Enter Aadhaar Number</label>
+        <div class="input-wrap">
+          <input type="text" id="aadhaarInput" placeholder="Enter 12 digit Aadhaar number"
+            maxlength="12" inputmode="numeric"
+            oninput="this.value=this.value.replace(/[^0-9]/g,''); onAadhaarInput()">
+        </div>
+        <p id="aadhaarHint" class="field-hint">Optional for first entry</p>
+      </div>
+
+      <!-- Inline status message -->
+      <div id="statusMsg" class="status-msg info hidden">
+        <span id="statusMsgText"></span>
+      </div>
+
+      <!-- Buttons -->
+      <button id="addBtn" class="btn btn-add" onclick="handleAddPerson()" disabled>
+        <span class="btn-icon">👤</span>
+        <span id="addBtnText">ADD PERSON</span>
+      </button>
+
+      <button id="cancelEditBtn" class="btn btn-secondary hidden" onclick="cancelEdit()">
+        <span class="btn-icon">✕</span> CANCEL EDIT
+      </button>
+
+      <button class="btn btn-secondary" onclick="clearForm()">
+        <span class="btn-icon">⌫</span> CLEAR FORM
+      </button>
+
+      <button class="btn btn-new-session" onclick="confirmNewSession()">
+        <span class="btn-icon">🔄</span> NEW SESSION
+      </button>
+
+      <div class="divider"></div>
+
+      <button id="printBtn" class="btn btn-print" onclick="handlePrint()">
+        <span class="btn-icon">🖨️</span> PRINT PDF
+      </button>
+    </div>
+
+    <!-- ── COLUMN 2: Recorded Entries ─────────────────────── -->
+    <div class="card entries-panel">
+      <div class="card-header">
+        <div class="card-icon blue">📋</div>
+        <div>
+          <h3>Entries Captured</h3>
+          <p>View, edit or delete captured entries</p>
+        </div>
+      </div>
+
+      <!-- Entries content rendered by JS -->
+      <div id="entriesContent" class="entries-table-wrap">
+        <div class="empty-state">
+          <div class="empty-icon">📋</div>
+          <p>No entries recorded yet.</p>
+          <small>Capture a photo and start adding entries.</small>
+        </div>
+      </div>
+
+      <div class="entries-footer">
+        <span>📋</span>
+        <span>Total Entries: <strong id="totalCount">0</strong></span>
+      </div>
+    </div>
+
+    <!-- ── COLUMN 3: Camera ────────────────────────────────── -->
+    <div class="card camera-panel">
+      <div class="card-header">
+        <div class="card-icon amber">📷</div>
+        <div>
+          <h3>Camera</h3>
+          <p>Capture and lock photo</p>
+        </div>
+      </div>
+
+      <!-- Live preview -->
+      <div class="camera-live-label">
+        <span>LIVE PREVIEW</span>
+        <div class="live-indicator">
+          <div id="liveDot" class="live-dot"></div>
+          <span id="liveLabel">LIVE</span>
+        </div>
+      </div>
+
+      <div class="video-wrap">
+        <video id="cameraFeed" autoplay playsinline muted></video>
+        <div id="cameraError" class="camera-error-msg hidden">
+          📵 Camera access is blocked. Please allow camera permission and refresh the page.
+        </div>
+      </div>
+
+      <!-- Captured photo -->
+      <p class="captured-section-label">CAPTURED PHOTO</p>
+      <div class="captured-photo-wrap">
+        <img id="capturedPhoto" src="" alt="Captured photo" class="hidden">
+        <div id="photoPlaceholder" class="captured-placeholder">
+          No photo captured yet.<br>Click "Capture Photo" to begin.
+        </div>
+      </div>
+
+      <button id="captureBtn" class="btn btn-capture" onclick="capturePhoto()">
+        <span class="btn-icon">📷</span> CAPTURE PHOTO
+      </button>
+
+      <button id="retakeBtn" class="btn btn-secondary hidden" onclick="confirmRetake()">
+        <span class="btn-icon">🔄</span> RETAKE PHOTO
+      </button>
+    </div>
+
+  </div><!-- /dashboard-grid -->
+</div><!-- /mainApp -->
+
+<!-- Toast -->
+<div id="toast" class="toast"></div>
+
+<!-- Flash effect -->
+<div id="flash" class="flash"></div>
+
+<!-- Hidden canvas for photo capture -->
+<canvas id="canvas" style="display:none;"></canvas>
+
+<script src="supabase.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
