@@ -57,11 +57,24 @@ function showDashboard() {
 }
 
 async function handleLogin() {
-  const email    = $a('loginEmail').value.trim();
+  const rawInput = $a('loginEmail').value.trim().toLowerCase();
   const password = $a('loginPassword').value;
 
-  if (!email || !password) {
-    showLoginError('Please enter your email and password.');
+  if (!rawInput || !password) {
+    showLoginError('Please enter your username and password.');
+    return;
+  }
+
+  // Resolve short username → full email via ADMIN_USERNAMES map.
+  // If the input already contains '@' treat it as a direct email (fallback).
+  const email = rawInput.includes('@')
+    ? rawInput
+    : (ADMIN_USERNAMES[rawInput] || null);
+
+  if (!email) {
+    showLoginError('Username not recognised. Please check and try again.');
+    $a('loginBtn').disabled   = false;
+    $a('loginBtn').textContent = 'Sign In';
     return;
   }
 
