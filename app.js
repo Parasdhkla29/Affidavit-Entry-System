@@ -22,16 +22,16 @@ const aadhaarInput = () => $('aadhaarInput');
    WELCOME — LOGIN + TRANSITION
    ===================================================================== */
 
-// Restore session from sessionStorage on page load
-function checkExistingSession() {
-  const saved = sessionStorage.getItem('operatorName');
-  if (saved && ADMIN_CREDENTIALS[saved] !== undefined) {
-    state.currentUser = { username: saved };
-    showWelcomeLoggedIn(saved);
+// Check if already logged in (Supabase persists sessions automatically)
+async function checkExistingSession() {
+  const { data: { user } } = await db.auth.getUser();
+  if (user) {
+    state.currentUser = user;
+    showWelcomeLoggedIn(resolveUsername(user.email));
   }
 }
 
-function loginAndStart() {
+async function loginAndStart() {
   const username = $('welcomeUsername').value.trim().toUpperCase();
   const password = $('welcomePassword').value;
 
@@ -40,15 +40,34 @@ function loginAndStart() {
     return;
   }
 
-  if (ADMIN_CREDENTIALS[username] !== password) {
-    showWelcomeError('Incorrect username or password.');
+  const email = ADMIN_USERNAMES[username];
+  if (!email) {
+    showWelcomeError('Username not recognised.');
     return;
   }
 
-  sessionStorage.setItem('operatorName', username);
-  state.currentUser = { username };
+  const btn = $('welcomeLoginBtn');
+  btn.disabled    = true;
+  btn.textContent = 'Signing in…';
   hideWelcomeError();
+
+  const { data, error } = await db.auth.signInWithPassword({ email, password });
+
+  if (error) {
+    showWelcomeError('Incorrect username or password.');
+    btn.disabled  = false;
+    btn.innerHTML = '<span>🔐</span> Sign In & Start';
+    return;
+  }
+
+  state.currentUser = data.user;
   showWelcomeLoggedIn(username);
+}
+
+// Find the display username from a Supabase email
+function resolveUsername(email) {
+  const match = Object.entries(ADMIN_USERNAMES).find(([, v]) => v === email);
+  return match ? match[0] : email;
 }
 
 function showWelcomeLoggedIn(username) {
@@ -64,8 +83,8 @@ function showWelcomeError(msg) {
 }
 function hideWelcomeError() { $('welcomeError').classList.add('hidden'); }
 
-function signOutMain() {
-  sessionStorage.removeItem('operatorName');
+async function signOutMain() {
+  await db.auth.signOut();
   state.currentUser = null;
 
   $('welcomeLoggedIn').classList.add('hidden');
@@ -96,7 +115,7 @@ function startApp() {
 
     if (state.currentUser) {
       const badge = $('headerUserBadge');
-      badge.textContent = '👤 ' + state.currentUser.username;
+      badge.textContent = '👤 ' + resolveUsername(state.currentUser.email);
       badge.classList.remove('hidden');
       $('headerLogoutBtn').classList.remove('hidden');
     }
@@ -766,8 +785,8 @@ async function saveToSupabase(pdfBlob, fileName) {
         second_entry_name: persons[1]?.name  || '',
         total_entries:     persons.length,
         status:            'SAVED',
-        operator_name:     state.currentUser?.username || 'ADMIN',
-        user_id:           null,
+        operator_name:     resolveUsername(state.currentUser?.email || ''),
+        user_id:           state.currentUser?.id || null,
       })
       .select()
       .single();

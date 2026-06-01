@@ -10,11 +10,11 @@ let searchTimer   = null;
 /* =====================================================================
    INIT
    ===================================================================== */
-document.addEventListener('DOMContentLoaded', () => {
-  // Check if already logged in via sessionStorage
-  const saved = sessionStorage.getItem('operatorName');
-  if (saved && ADMIN_CREDENTIALS[saved] !== undefined) {
-    showDashboard(saved);
+document.addEventListener('DOMContentLoaded', async () => {
+  // Supabase auto-restores session from localStorage
+  const { data: { user } } = await db.auth.getUser();
+  if (user) {
+    showDashboard(resolveAdminUsername(user.email));
     loadSessions();
   } else {
     showLoginScreen();
@@ -26,8 +26,13 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /* =====================================================================
-   AUTH  — simple credential check, no Supabase Auth
+   AUTH — username UI, Supabase Auth backend, passwords in dashboard
    ===================================================================== */
+function resolveAdminUsername(email) {
+  const match = Object.entries(ADMIN_USERNAMES).find(([, v]) => v === email);
+  return match ? match[0] : email;
+}
+
 function showLoginScreen() {
   $a('loginScreen').classList.remove('hidden');
   $a('loginScreen').style.display = 'flex';
@@ -36,17 +41,15 @@ function showLoginScreen() {
 }
 
 function showDashboard(username) {
-  // Show who is logged in
-  const brand = $a('adminDashboard').querySelector('.admin-brand h1');
-  if (brand && username) brand.textContent = `Admin Portal — ${username}`;
-
+  const badge = $a('adminUserBadge');
+  if (badge) badge.textContent = '👤 ' + username;
   $a('loginScreen').classList.add('hidden');
   $a('loginScreen').style.display = 'none';
   $a('adminDashboard').classList.remove('hidden');
   $a('adminDashboard').style.display = 'flex';
 }
 
-function handleLogin() {
+async function handleLogin() {
   const username = $a('loginEmail').value.trim().toUpperCase();
   const password = $a('loginPassword').value;
 
@@ -55,19 +58,32 @@ function handleLogin() {
     return;
   }
 
-  if (ADMIN_CREDENTIALS[username] !== password) {
-    showLoginError('Incorrect username or password.');
+  const email = ADMIN_USERNAMES[username];
+  if (!email) {
+    showLoginError('Username not recognised.');
     return;
   }
 
-  sessionStorage.setItem('operatorName', username);
+  const btn = $a('loginBtn');
+  btn.disabled    = true;
+  btn.textContent = 'Signing in…';
   $a('loginError').classList.add('hidden');
+
+  const { error } = await db.auth.signInWithPassword({ email, password });
+
+  if (error) {
+    showLoginError('Incorrect username or password.');
+    btn.disabled    = false;
+    btn.textContent = 'Sign In';
+    return;
+  }
+
   showDashboard(username);
   loadSessions();
 }
 
-function handleLogout() {
-  sessionStorage.removeItem('operatorName');
+async function handleLogout() {
+  await db.auth.signOut();
   showLoginScreen();
   allSessions = [];
 }
@@ -86,12 +102,10 @@ async function loadSessions() {
     <tr><td colspan="8" class="admin-loading">Loading records…</td></tr>`;
   $a('tableFooter').textContent = 'Loading…';
 
-  const operator = sessionStorage.getItem('operatorName') || '';
-
+  // RLS automatically filters to only this user's sessions via user_id = auth.uid()
   const { data, error } = await db
     .from('affidavit_sessions')
     .select('*')
-    .eq('operator_name', operator)
     .order('created_at', { ascending: false })
     .limit(200);
 
