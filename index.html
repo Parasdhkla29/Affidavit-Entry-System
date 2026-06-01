@@ -21,11 +21,32 @@
       <span>🏛️</span> Saral Centre Nilokheri
     </div>
     <div class="welcome-icon-wrap">📋</div>
-    <h1>Welcome to<br>Affidavit Entry System</h1>
-    <p>Capture photo, record entries, and print the final affidavit sheet quickly and securely.</p>
-    <button class="btn-start" onclick="startApp()">
-      <span>▶</span> Start New Session
-    </button>
+    <h1>Affidavit Entry System</h1>
+    <p>Sign in to capture photos, record entries, and print the final affidavit sheet.</p>
+
+    <!-- ── Login form (shown before sign-in) ── -->
+    <div id="welcomeLoginSection">
+      <div class="welcome-fields">
+        <input type="text"     id="welcomeUsername" class="welcome-input" placeholder="Username" autocomplete="username">
+        <input type="password" id="welcomePassword" class="welcome-input" placeholder="Password" autocomplete="current-password">
+      </div>
+      <div id="welcomeError" class="welcome-error hidden"></div>
+      <button id="welcomeLoginBtn" class="btn-start" onclick="loginAndStart()">
+        <span>🔐</span> Sign In &amp; Start
+      </button>
+    </div>
+
+    <!-- ── After sign-in ── -->
+    <div id="welcomeLoggedIn" class="hidden">
+      <div class="welcome-user-pill">
+        👤 <span id="welcomeUserLabel">—</span>
+      </div>
+      <button class="btn-start" onclick="startApp()">
+        <span>▶</span> Start New Session
+      </button>
+      <button class="welcome-signout" onclick="signOutMain()">Sign out</button>
+    </div>
+
     <div class="welcome-footer">
       <span>Camera Capture</span>
       <span>Aadhaar Records</span>
@@ -49,7 +70,9 @@
       </div>
     </div>
     <div class="header-actions">
+      <span id="headerUserBadge" class="header-user-badge hidden"></span>
       <a href="admin.html" class="btn-admin" target="_blank">🔐 Admin Portal</a>
+      <button id="headerLogoutBtn" class="btn-header-logout hidden" onclick="signOutMain()">Sign Out</button>
     </div>
   </header>
 
