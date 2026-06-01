@@ -29,8 +29,7 @@ document.addEventListener('DOMContentLoaded', async () => {
    AUTH — username UI, Supabase Auth backend, passwords in dashboard
    ===================================================================== */
 function resolveAdminUsername(email) {
-  const match = Object.entries(ADMIN_USERNAMES).find(([, v]) => v === email);
-  return match ? match[0] : email;
+  return (email || '').split('@')[0].toUpperCase();
 }
 
 function showLoginScreen() {
@@ -50,7 +49,7 @@ function showDashboard(username) {
 }
 
 async function handleLogin() {
-  const username = $a('loginEmail').value.trim().toUpperCase();
+  const username = $a('loginEmail').value.trim();
   const password = $a('loginPassword').value;
 
   if (!username || !password) {
@@ -58,11 +57,8 @@ async function handleLogin() {
     return;
   }
 
-  const email = ADMIN_USERNAMES[username];
-  if (!email) {
-    showLoginError('Username not recognised.');
-    return;
-  }
+  // Build email: "paras" → "paras@saral.local"
+  const email = username.includes('@') ? username : (username.toLowerCase() + AUTH_DOMAIN);
 
   const btn = $a('loginBtn');
   btn.disabled    = true;

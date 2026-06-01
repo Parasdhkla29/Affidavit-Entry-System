@@ -32,7 +32,7 @@ async function checkExistingSession() {
 }
 
 async function loginAndStart() {
-  const username = $('welcomeUsername').value.trim().toUpperCase();
+  const username = $('welcomeUsername').value.trim().toLowerCase();
   const password = $('welcomePassword').value;
 
   if (!username || !password) {
@@ -40,11 +40,8 @@ async function loginAndStart() {
     return;
   }
 
-  const email = ADMIN_USERNAMES[username];
-  if (!email) {
-    showWelcomeError('Username not recognised.');
-    return;
-  }
+  // Build email: "paras" → "paras@saral.local"
+  const email = username.includes('@') ? username : (username + AUTH_DOMAIN);
 
   const btn = $('welcomeLoginBtn');
   btn.disabled    = true;
@@ -61,13 +58,12 @@ async function loginAndStart() {
   }
 
   state.currentUser = data.user;
-  showWelcomeLoggedIn(username);
+  showWelcomeLoggedIn(resolveUsername(data.user.email));
 }
 
-// Find the display username from a Supabase email
+// Extract display name from email — "paras@saral.local" → "PARAS"
 function resolveUsername(email) {
-  const match = Object.entries(ADMIN_USERNAMES).find(([, v]) => v === email);
-  return match ? match[0] : email;
+  return (email || '').split('@')[0].toUpperCase();
 }
 
 function showWelcomeLoggedIn(username) {
@@ -785,7 +781,7 @@ async function saveToSupabase(pdfBlob, fileName) {
         second_entry_name: persons[1]?.name  || '',
         total_entries:     persons.length,
         status:            'SAVED',
-        operator_name:     resolveUsername(state.currentUser?.email || ''),
+        operator_name:     resolveUsername(state.currentUser?.email),
         user_id:           state.currentUser?.id || null,
       })
       .select()

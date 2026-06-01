@@ -67,26 +67,22 @@ const SUPABASE_URL      = 'https://cmarvjdhcvlqxjodgiyj.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNtYXJ2amRoY3ZscXhqb2RnaXlqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAzMDkwMjMsImV4cCI6MjA5NTg4NTAyM30.XLGAK8V6plaJptUAVqucQR4BXcdp8H8JoH7Zn3RCuw0';
 
 /*
- * ADMIN USERNAME MAP
+ * AUTH DOMAIN
  * ─────────────────────────────────────────────────────────────────
- * Maps the short username (what the user types) to a Supabase Auth
- * email. Passwords are managed entirely in Supabase Dashboard →
- * Authentication → Users. Nothing sensitive is stored here.
+ * Users type just their name (e.g. "paras") — the app automatically
+ * appends this domain to form the Supabase Auth email.
  *
  * To add a new user:
- *   1. Add a line below:  'NEWNAME': 'newname@saral.local'
- *   2. Go to Supabase → Authentication → Users → Add user
- *      Email: newname@saral.local  |  Password: whatever you set
+ *   Supabase → Authentication → Users → Add user
+ *   Email:    paras@saral.local   (name + AUTH_DOMAIN)
+ *   Password: set whatever you like
  *
  * To change a password:
  *   Supabase → Authentication → Users → click user → Reset password
+ *
+ * No code changes needed when adding new users.
  * ─────────────────────────────────────────────────────────────────
  */
-const ADMIN_USERNAMES = {
-  'ADMIN':  'admin@saral.local',
-  'PARAS':  'paras@saral.local',
-  'TEHSIL': 'tehsil@saral.local',
-  'RINKU':  'rinku@saral.local',
-};
+const AUTH_DOMAIN = '@saral.local';
 
 const db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
