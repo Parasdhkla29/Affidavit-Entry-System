@@ -19,77 +19,42 @@ let searchTimer   = null;
    INIT
    ===================================================================== */
 document.addEventListener('DOMContentLoaded', async () => {
-  // Supabase auto-restores session from localStorage
+  // Check if user is already logged in from index.html session
   const { data: { user } } = await db.auth.getUser();
-  if (user) {
-    showDashboard(resolveAdminUsername(user.email));
-    loadSessions();
-  } else {
-    showLoginScreen();
+
+  if (!user) {
+    // Not logged in — send back to main app to sign in
+    window.location.href = 'index.html';
+    return;
   }
 
-  $a('loginPassword').addEventListener('keydown', e => { if (e.key === 'Enter') handleLogin(); });
-  $a('loginEmail').addEventListener('keydown',    e => { if (e.key === 'Enter') $a('loginPassword').focus(); });
-  $a('sessionModal').addEventListener('click',    e => { if (e.target === $a('sessionModal')) closeModal(); });
+  // Logged in — hide the checking screen, show dashboard
+  $a('authChecking').style.display = 'none';
+  showDashboard(resolveAdminUsername(user.email));
+  loadSessions();
+
+  $a('sessionModal').addEventListener('click', e => {
+    if (e.target === $a('sessionModal')) closeModal();
+  });
 });
 
 /* =====================================================================
-   AUTH — username UI, Supabase Auth backend, passwords in dashboard
+   AUTH
    ===================================================================== */
 function resolveAdminUsername(email) {
   return (email || '').split('@')[0].toUpperCase();
 }
 
-function showLoginScreen() {
-  $a('loginScreen').classList.remove('hidden');
-  $a('loginScreen').style.display = 'flex';
-  $a('adminDashboard').classList.add('hidden');
-  $a('adminDashboard').style.display = 'none';
-}
-
 function showDashboard(username) {
   const badge = $a('adminUserBadge');
   if (badge) badge.textContent = '👤 ' + username;
-  $a('loginScreen').classList.add('hidden');
-  $a('loginScreen').style.display = 'none';
   $a('adminDashboard').classList.remove('hidden');
   $a('adminDashboard').style.display = 'flex';
 }
 
-async function handleLogin() {
-  const username = $a('loginEmail').value.trim();
-  const password = $a('loginPassword').value;
-
-  if (!username || !password) {
-    showLoginError('Please enter your username and password.');
-    return;
-  }
-
-  // Build email: "paras" → "paras@saral.local"
-  const email = username.includes('@') ? username : (username.toLowerCase() + AUTH_DOMAIN);
-
-  const btn = $a('loginBtn');
-  btn.disabled    = true;
-  btn.textContent = 'Signing in…';
-  $a('loginError').classList.add('hidden');
-
-  const { error } = await db.auth.signInWithPassword({ email, password });
-
-  if (error) {
-    showLoginError('Incorrect username or password.');
-    btn.disabled    = false;
-    btn.textContent = 'Sign In';
-    return;
-  }
-
-  showDashboard(username);
-  loadSessions();
-}
-
 async function handleLogout() {
   await db.auth.signOut();
-  showLoginScreen();
-  allSessions = [];
+  window.location.href = 'index.html';
 }
 
 function showLoginError(msg) {

@@ -1,0 +1,2229 @@
+{
+  "nodes": [
+    {
+      "id": "admin",
+      "label": "admin.js",
+      "file_type": "code",
+      "source_file": "admin.js",
+      "source_location": "L1"
+    },
+    {
+      "id": "admin_a",
+      "label": "$a()",
+      "file_type": "code",
+      "source_file": "admin.js",
+      "source_location": "L5"
+    },
+    {
+      "id": "admin_togglepassword",
+      "label": "togglePassword()",
+      "file_type": "code",
+      "source_file": "admin.js",
+      "source_location": "L7"
+    },
+    {
+      "id": "admin_allsessions",
+      "label": "allSessions",
+      "file_type": "code",
+      "source_file": "admin.js",
+      "source_location": "L15"
+    },
+    {
+      "id": "admin_resolveadminusername",
+      "label": "resolveAdminUsername()",
+      "file_type": "code",
+      "source_file": "admin.js",
+      "source_location": "L39"
+    },
+    {
+      "id": "admin_showloginscreen",
+      "label": "showLoginScreen()",
+      "file_type": "code",
+      "source_file": "admin.js",
+      "source_location": "L43"
+    },
+    {
+      "id": "admin_showdashboard",
+      "label": "showDashboard()",
+      "file_type": "code",
+      "source_file": "admin.js",
+      "source_location": "L50"
+    },
+    {
+      "id": "admin_handlelogin",
+      "label": "handleLogin()",
+      "file_type": "code",
+      "source_file": "admin.js",
+      "source_location": "L59"
+    },
+    {
+      "id": "admin_handlelogout",
+      "label": "handleLogout()",
+      "file_type": "code",
+      "source_file": "admin.js",
+      "source_location": "L89"
+    },
+    {
+      "id": "admin_showloginerror",
+      "label": "showLoginError()",
+      "file_type": "code",
+      "source_file": "admin.js",
+      "source_location": "L95"
+    },
+    {
+      "id": "admin_loadsessions",
+      "label": "loadSessions()",
+      "file_type": "code",
+      "source_file": "admin.js",
+      "source_location": "L104"
+    },
+    {
+      "id": "admin_updatestats",
+      "label": "updateStats()",
+      "file_type": "code",
+      "source_file": "admin.js",
+      "source_location": "L130"
+    },
+    {
+      "id": "admin_sessionlocaldate",
+      "label": "sessionLocalDate()",
+      "file_type": "code",
+      "source_file": "admin.js",
+      "source_location": "L144"
+    },
+    {
+      "id": "admin_onfilterchange",
+      "label": "onFilterChange()",
+      "file_type": "code",
+      "source_file": "admin.js",
+      "source_location": "L149"
+    },
+    {
+      "id": "admin_settodayfilter",
+      "label": "setTodayFilter()",
+      "file_type": "code",
+      "source_file": "admin.js",
+      "source_location": "L154"
+    },
+    {
+      "id": "admin_clearfilters",
+      "label": "clearFilters()",
+      "file_type": "code",
+      "source_file": "admin.js",
+      "source_location": "L159"
+    },
+    {
+      "id": "admin_applyfilters",
+      "label": "applyFilters()",
+      "file_type": "code",
+      "source_file": "admin.js",
+      "source_location": "L165"
+    },
+    {
+      "id": "admin_rendersessionstable",
+      "label": "renderSessionsTable()",
+      "file_type": "code",
+      "source_file": "admin.js",
+      "source_location": "L191"
+    },
+    {
+      "id": "admin_viewsession",
+      "label": "viewSession()",
+      "file_type": "code",
+      "source_file": "admin.js",
+      "source_location": "L235"
+    },
+    {
+      "id": "admin_closemodal",
+      "label": "closeModal()",
+      "file_type": "code",
+      "source_file": "admin.js",
+      "source_location": "L332"
+    },
+    {
+      "id": "admin_deletesession",
+      "label": "deleteSession()",
+      "file_type": "code",
+      "source_file": "admin.js",
+      "source_location": "L339"
+    },
+    {
+      "id": "admin_onmonthselect",
+      "label": "onMonthSelect()",
+      "file_type": "code",
+      "source_file": "admin.js",
+      "source_location": "L360"
+    },
+    {
+      "id": "admin_getsessionsformonth",
+      "label": "getSessionsForMonth()",
+      "file_type": "code",
+      "source_file": "admin.js",
+      "source_location": "L379"
+    },
+    {
+      "id": "admin_downloadmonthlyzip",
+      "label": "downloadMonthlyZip()",
+      "file_type": "code",
+      "source_file": "admin.js",
+      "source_location": "L390"
+    },
+    {
+      "id": "admin_formatdate",
+      "label": "formatDate()",
+      "file_type": "code",
+      "source_file": "admin.js",
+      "source_location": "L515"
+    },
+    {
+      "id": "admin_eschtml",
+      "label": "escHtml()",
+      "file_type": "code",
+      "source_file": "admin.js",
+      "source_location": "L525"
+    },
+    {
+      "id": "admin_showadmintoast",
+      "label": "showAdminToast()",
+      "file_type": "code",
+      "source_file": "admin.js",
+      "source_location": "L530"
+    },
+    {
+      "id": "app",
+      "label": "app.js",
+      "file_type": "code",
+      "source_file": "app.js",
+      "source_location": "L1"
+    },
+    {
+      "id": "app_state",
+      "label": "state",
+      "file_type": "code",
+      "source_file": "app.js",
+      "source_location": "L6"
+    },
+    {
+      "id": "app_persons",
+      "label": "persons",
+      "file_type": "code",
+      "source_file": "app.js",
+      "source_location": "L14"
+    },
+    {
+      "id": "saral_kendra_code_app",
+      "label": "$()",
+      "file_type": "code",
+      "source_file": "app.js",
+      "source_location": "L17"
+    },
+    {
+      "id": "app_nameinput",
+      "label": "nameInput()",
+      "file_type": "code",
+      "source_file": "app.js",
+      "source_location": "L18"
+    },
+    {
+      "id": "app_aadhaarinput",
+      "label": "aadhaarInput()",
+      "file_type": "code",
+      "source_file": "app.js",
+      "source_location": "L19"
+    },
+    {
+      "id": "app_checkexistingsession",
+      "label": "checkExistingSession()",
+      "file_type": "code",
+      "source_file": "app.js",
+      "source_location": "L26"
+    },
+    {
+      "id": "app_loginandstart",
+      "label": "loginAndStart()",
+      "file_type": "code",
+      "source_file": "app.js",
+      "source_location": "L34"
+    },
+    {
+      "id": "app_resolveusername",
+      "label": "resolveUsername()",
+      "file_type": "code",
+      "source_file": "app.js",
+      "source_location": "L65"
+    },
+    {
+      "id": "app_showwelcomeloggedin",
+      "label": "showWelcomeLoggedIn()",
+      "file_type": "code",
+      "source_file": "app.js",
+      "source_location": "L69"
+    },
+    {
+      "id": "app_togglepassword",
+      "label": "togglePassword()",
+      "file_type": "code",
+      "source_file": "app.js",
+      "source_location": "L75"
+    },
+    {
+      "id": "app_showwelcomeerror",
+      "label": "showWelcomeError()",
+      "file_type": "code",
+      "source_file": "app.js",
+      "source_location": "L83"
+    },
+    {
+      "id": "app_hidewelcomeerror",
+      "label": "hideWelcomeError()",
+      "file_type": "code",
+      "source_file": "app.js",
+      "source_location": "L88"
+    },
+    {
+      "id": "app_signoutmain",
+      "label": "signOutMain()",
+      "file_type": "code",
+      "source_file": "app.js",
+      "source_location": "L90"
+    },
+    {
+      "id": "app_startapp",
+      "label": "startApp()",
+      "file_type": "code",
+      "source_file": "app.js",
+      "source_location": "L111"
+    },
+    {
+      "id": "app_setupcamera",
+      "label": "setupCamera()",
+      "file_type": "code",
+      "source_file": "app.js",
+      "source_location": "L135"
+    },
+    {
+      "id": "app_stopcamera",
+      "label": "stopCamera()",
+      "file_type": "code",
+      "source_file": "app.js",
+      "source_location": "L155"
+    },
+    {
+      "id": "app_capturephoto",
+      "label": "capturePhoto()",
+      "file_type": "code",
+      "source_file": "app.js",
+      "source_location": "L162"
+    },
+    {
+      "id": "app_confirmretake",
+      "label": "confirmRetake()",
+      "file_type": "code",
+      "source_file": "app.js",
+      "source_location": "L212"
+    },
+    {
+      "id": "app_retakephoto",
+      "label": "retakePhoto()",
+      "file_type": "code",
+      "source_file": "app.js",
+      "source_location": "L219"
+    },
+    {
+      "id": "app_handleaddperson",
+      "label": "handleAddPerson()",
+      "file_type": "code",
+      "source_file": "app.js",
+      "source_location": "L253"
+    },
+    {
+      "id": "app_editperson",
+      "label": "editPerson()",
+      "file_type": "code",
+      "source_file": "app.js",
+      "source_location": "L285"
+    },
+    {
+      "id": "app_canceledit",
+      "label": "cancelEdit()",
+      "file_type": "code",
+      "source_file": "app.js",
+      "source_location": "L302"
+    },
+    {
+      "id": "app_deleteperson",
+      "label": "deletePerson()",
+      "file_type": "code",
+      "source_file": "app.js",
+      "source_location": "L311"
+    },
+    {
+      "id": "app_validateentry",
+      "label": "validateEntry()",
+      "file_type": "code",
+      "source_file": "app.js",
+      "source_location": "L329"
+    },
+    {
+      "id": "app_renderentries",
+      "label": "renderEntries()",
+      "file_type": "code",
+      "source_file": "app.js",
+      "source_location": "L345"
+    },
+    {
+      "id": "app_clearform",
+      "label": "clearForm()",
+      "file_type": "code",
+      "source_file": "app.js",
+      "source_location": "L392"
+    },
+    {
+      "id": "app_updateaadhaarhint",
+      "label": "updateAadhaarHint()",
+      "file_type": "code",
+      "source_file": "app.js",
+      "source_location": "L398"
+    },
+    {
+      "id": "app_onnameinput",
+      "label": "onNameInput()",
+      "file_type": "code",
+      "source_file": "app.js",
+      "source_location": "L412"
+    },
+    {
+      "id": "app_onaadhaarinput",
+      "label": "onAadhaarInput()",
+      "file_type": "code",
+      "source_file": "app.js",
+      "source_location": "L418"
+    },
+    {
+      "id": "app_showstatus",
+      "label": "showStatus()",
+      "file_type": "code",
+      "source_file": "app.js",
+      "source_location": "L420"
+    },
+    {
+      "id": "app_hidestatus",
+      "label": "hideStatus()",
+      "file_type": "code",
+      "source_file": "app.js",
+      "source_location": "L427"
+    },
+    {
+      "id": "app_showtoast",
+      "label": "showToast()",
+      "file_type": "code",
+      "source_file": "app.js",
+      "source_location": "L432"
+    },
+    {
+      "id": "app_flashscreen",
+      "label": "flashScreen()",
+      "file_type": "code",
+      "source_file": "app.js",
+      "source_location": "L440"
+    },
+    {
+      "id": "app_eschtml",
+      "label": "escHtml()",
+      "file_type": "code",
+      "source_file": "app.js",
+      "source_location": "L446"
+    },
+    {
+      "id": "app_confirmnewsession",
+      "label": "confirmNewSession()",
+      "file_type": "code",
+      "source_file": "app.js",
+      "source_location": "L451"
+    },
+    {
+      "id": "app_resetsession",
+      "label": "resetSession()",
+      "file_type": "code",
+      "source_file": "app.js",
+      "source_location": "L458"
+    },
+    {
+      "id": "app_loaddevanagarifont",
+      "label": "loadDevanagariFont()",
+      "file_type": "code",
+      "source_file": "app.js",
+      "source_location": "L505"
+    },
+    {
+      "id": "app_arraybuffertobase64",
+      "label": "arrayBufferToBase64()",
+      "file_type": "code",
+      "source_file": "app.js",
+      "source_location": "L519"
+    },
+    {
+      "id": "app_generatefilename",
+      "label": "generateFileName()",
+      "file_type": "code",
+      "source_file": "app.js",
+      "source_location": "L530"
+    },
+    {
+      "id": "app_generatepdf",
+      "label": "generatePDF()",
+      "file_type": "code",
+      "source_file": "app.js",
+      "source_location": "L542"
+    },
+    {
+      "id": "app_handleprint",
+      "label": "handlePrint()",
+      "file_type": "code",
+      "source_file": "app.js",
+      "source_location": "L692"
+    },
+    {
+      "id": "app_savetosupabase",
+      "label": "saveToSupabase()",
+      "file_type": "code",
+      "source_file": "app.js",
+      "source_location": "L753"
+    },
+    {
+      "id": "app_dataurltoblob",
+      "label": "dataURLtoBlob()",
+      "file_type": "code",
+      "source_file": "app.js",
+      "source_location": "L823"
+    },
+    {
+      "id": "supabase",
+      "label": "supabase.js",
+      "file_type": "code",
+      "source_file": "supabase.js",
+      "source_location": "L1"
+    },
+    {
+      "id": "supabase_db",
+      "label": "db",
+      "file_type": "code",
+      "source_file": "supabase.js",
+      "source_location": "L88"
+    }
+  ],
+  "edges": [
+    {
+      "source": "admin",
+      "target": "admin_a",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "admin.js",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "admin",
+      "target": "admin_togglepassword",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "admin.js",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "admin",
+      "target": "admin_allsessions",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "admin.js",
+      "source_location": "L15",
+      "weight": 1.0
+    },
+    {
+      "source": "admin",
+      "target": "admin_resolveadminusername",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "admin.js",
+      "source_location": "L39",
+      "weight": 1.0
+    },
+    {
+      "source": "admin",
+      "target": "admin_showloginscreen",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "admin.js",
+      "source_location": "L43",
+      "weight": 1.0
+    },
+    {
+      "source": "admin",
+      "target": "admin_showdashboard",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "admin.js",
+      "source_location": "L50",
+      "weight": 1.0
+    },
+    {
+      "source": "admin",
+      "target": "admin_handlelogin",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "admin.js",
+      "source_location": "L59",
+      "weight": 1.0
+    },
+    {
+      "source": "admin",
+      "target": "admin_handlelogout",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "admin.js",
+      "source_location": "L89",
+      "weight": 1.0
+    },
+    {
+      "source": "admin",
+      "target": "admin_showloginerror",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "admin.js",
+      "source_location": "L95",
+      "weight": 1.0
+    },
+    {
+      "source": "admin",
+      "target": "admin_loadsessions",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "admin.js",
+      "source_location": "L104",
+      "weight": 1.0
+    },
+    {
+      "source": "admin",
+      "target": "admin_updatestats",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "admin.js",
+      "source_location": "L130",
+      "weight": 1.0
+    },
+    {
+      "source": "admin",
+      "target": "admin_sessionlocaldate",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "admin.js",
+      "source_location": "L144",
+      "weight": 1.0
+    },
+    {
+      "source": "admin",
+      "target": "admin_onfilterchange",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "admin.js",
+      "source_location": "L149",
+      "weight": 1.0
+    },
+    {
+      "source": "admin",
+      "target": "admin_settodayfilter",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "admin.js",
+      "source_location": "L154",
+      "weight": 1.0
+    },
+    {
+      "source": "admin",
+      "target": "admin_clearfilters",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "admin.js",
+      "source_location": "L159",
+      "weight": 1.0
+    },
+    {
+      "source": "admin",
+      "target": "admin_applyfilters",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "admin.js",
+      "source_location": "L165",
+      "weight": 1.0
+    },
+    {
+      "source": "admin",
+      "target": "admin_rendersessionstable",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "admin.js",
+      "source_location": "L191",
+      "weight": 1.0
+    },
+    {
+      "source": "admin",
+      "target": "admin_viewsession",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "admin.js",
+      "source_location": "L235",
+      "weight": 1.0
+    },
+    {
+      "source": "admin",
+      "target": "admin_closemodal",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "admin.js",
+      "source_location": "L332",
+      "weight": 1.0
+    },
+    {
+      "source": "admin",
+      "target": "admin_deletesession",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "admin.js",
+      "source_location": "L339",
+      "weight": 1.0
+    },
+    {
+      "source": "admin",
+      "target": "admin_onmonthselect",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "admin.js",
+      "source_location": "L360",
+      "weight": 1.0
+    },
+    {
+      "source": "admin",
+      "target": "admin_getsessionsformonth",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "admin.js",
+      "source_location": "L379",
+      "weight": 1.0
+    },
+    {
+      "source": "admin",
+      "target": "admin_downloadmonthlyzip",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "admin.js",
+      "source_location": "L390",
+      "weight": 1.0
+    },
+    {
+      "source": "admin",
+      "target": "admin_formatdate",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "admin.js",
+      "source_location": "L515",
+      "weight": 1.0
+    },
+    {
+      "source": "admin",
+      "target": "admin_eschtml",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "admin.js",
+      "source_location": "L525",
+      "weight": 1.0
+    },
+    {
+      "source": "admin",
+      "target": "admin_showadmintoast",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "admin.js",
+      "source_location": "L530",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_showloginscreen",
+      "target": "admin_a",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "admin.js",
+      "source_location": "L44",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_showdashboard",
+      "target": "admin_a",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "admin.js",
+      "source_location": "L51",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_handlelogin",
+      "target": "admin_a",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "admin.js",
+      "source_location": "L60",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_handlelogin",
+      "target": "admin_showloginerror",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "admin.js",
+      "source_location": "L64",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_handlelogin",
+      "target": "admin_showdashboard",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "admin.js",
+      "source_location": "L85",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_handlelogin",
+      "target": "admin_loadsessions",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "admin.js",
+      "source_location": "L86",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_handlelogout",
+      "target": "admin_showloginscreen",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "admin.js",
+      "source_location": "L91",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_showloginerror",
+      "target": "admin_a",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "admin.js",
+      "source_location": "L96",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_loadsessions",
+      "target": "admin_a",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "admin.js",
+      "source_location": "L105",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_loadsessions",
+      "target": "admin_eschtml",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "admin.js",
+      "source_location": "L119",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_loadsessions",
+      "target": "admin_updatestats",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "admin.js",
+      "source_location": "L126",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_loadsessions",
+      "target": "admin_applyfilters",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "admin.js",
+      "source_location": "L127",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_updatestats",
+      "target": "admin_a",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "admin.js",
+      "source_location": "L131",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_settodayfilter",
+      "target": "admin_a",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "admin.js",
+      "source_location": "L155",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_settodayfilter",
+      "target": "admin_applyfilters",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "admin.js",
+      "source_location": "L156",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_clearfilters",
+      "target": "admin_a",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "admin.js",
+      "source_location": "L160",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_clearfilters",
+      "target": "admin_applyfilters",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "admin.js",
+      "source_location": "L162",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_applyfilters",
+      "target": "admin_a",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "admin.js",
+      "source_location": "L166",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_applyfilters",
+      "target": "admin_rendersessionstable",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "admin.js",
+      "source_location": "L187",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_rendersessionstable",
+      "target": "admin_a",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "admin.js",
+      "source_location": "L193",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_viewsession",
+      "target": "admin_a",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "admin.js",
+      "source_location": "L239",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_viewsession",
+      "target": "admin_eschtml",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "admin.js",
+      "source_location": "L251",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_viewsession",
+      "target": "admin_formatdate",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "admin.js",
+      "source_location": "L285",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_closemodal",
+      "target": "admin_a",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "admin.js",
+      "source_location": "L333",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_deletesession",
+      "target": "admin_showadmintoast",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "admin.js",
+      "source_location": "L349",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_deletesession",
+      "target": "admin_loadsessions",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "admin.js",
+      "source_location": "L354",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_onmonthselect",
+      "target": "admin_a",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "admin.js",
+      "source_location": "L361",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_onmonthselect",
+      "target": "admin_getsessionsformonth",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "admin.js",
+      "source_location": "L372",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_downloadmonthlyzip",
+      "target": "admin_showadmintoast",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "admin.js",
+      "source_location": "L393",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_downloadmonthlyzip",
+      "target": "admin_a",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "admin.js",
+      "source_location": "L397",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_downloadmonthlyzip",
+      "target": "admin_getsessionsformonth",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "admin.js",
+      "source_location": "L400",
+      "weight": 1.0
+    },
+    {
+      "source": "admin_showadmintoast",
+      "target": "admin_a",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "admin.js",
+      "source_location": "L531",
+      "weight": 1.0
+    },
+    {
+      "source": "app",
+      "target": "app_state",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "app",
+      "target": "app_persons",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L14",
+      "weight": 1.0
+    },
+    {
+      "source": "app",
+      "target": "saral_kendra_code_app",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L17",
+      "weight": 1.0
+    },
+    {
+      "source": "app",
+      "target": "app_nameinput",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L18",
+      "weight": 1.0
+    },
+    {
+      "source": "app",
+      "target": "app_aadhaarinput",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L19",
+      "weight": 1.0
+    },
+    {
+      "source": "app",
+      "target": "app_checkexistingsession",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L26",
+      "weight": 1.0
+    },
+    {
+      "source": "app",
+      "target": "app_loginandstart",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L34",
+      "weight": 1.0
+    },
+    {
+      "source": "app",
+      "target": "app_resolveusername",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L65",
+      "weight": 1.0
+    },
+    {
+      "source": "app",
+      "target": "app_showwelcomeloggedin",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L69",
+      "weight": 1.0
+    },
+    {
+      "source": "app",
+      "target": "app_togglepassword",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L75",
+      "weight": 1.0
+    },
+    {
+      "source": "app",
+      "target": "app_showwelcomeerror",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L83",
+      "weight": 1.0
+    },
+    {
+      "source": "app",
+      "target": "app_hidewelcomeerror",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L88",
+      "weight": 1.0
+    },
+    {
+      "source": "app",
+      "target": "app_signoutmain",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L90",
+      "weight": 1.0
+    },
+    {
+      "source": "app",
+      "target": "app_startapp",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L111",
+      "weight": 1.0
+    },
+    {
+      "source": "app",
+      "target": "app_setupcamera",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L135",
+      "weight": 1.0
+    },
+    {
+      "source": "app",
+      "target": "app_stopcamera",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L155",
+      "weight": 1.0
+    },
+    {
+      "source": "app",
+      "target": "app_capturephoto",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L162",
+      "weight": 1.0
+    },
+    {
+      "source": "app",
+      "target": "app_confirmretake",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L212",
+      "weight": 1.0
+    },
+    {
+      "source": "app",
+      "target": "app_retakephoto",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L219",
+      "weight": 1.0
+    },
+    {
+      "source": "app",
+      "target": "app_handleaddperson",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L253",
+      "weight": 1.0
+    },
+    {
+      "source": "app",
+      "target": "app_editperson",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L285",
+      "weight": 1.0
+    },
+    {
+      "source": "app",
+      "target": "app_canceledit",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L302",
+      "weight": 1.0
+    },
+    {
+      "source": "app",
+      "target": "app_deleteperson",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L311",
+      "weight": 1.0
+    },
+    {
+      "source": "app",
+      "target": "app_validateentry",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L329",
+      "weight": 1.0
+    },
+    {
+      "source": "app",
+      "target": "app_renderentries",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L345",
+      "weight": 1.0
+    },
+    {
+      "source": "app",
+      "target": "app_clearform",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L392",
+      "weight": 1.0
+    },
+    {
+      "source": "app",
+      "target": "app_updateaadhaarhint",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L398",
+      "weight": 1.0
+    },
+    {
+      "source": "app",
+      "target": "app_onnameinput",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L412",
+      "weight": 1.0
+    },
+    {
+      "source": "app",
+      "target": "app_onaadhaarinput",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L418",
+      "weight": 1.0
+    },
+    {
+      "source": "app",
+      "target": "app_showstatus",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L420",
+      "weight": 1.0
+    },
+    {
+      "source": "app",
+      "target": "app_hidestatus",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L427",
+      "weight": 1.0
+    },
+    {
+      "source": "app",
+      "target": "app_showtoast",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L432",
+      "weight": 1.0
+    },
+    {
+      "source": "app",
+      "target": "app_flashscreen",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L440",
+      "weight": 1.0
+    },
+    {
+      "source": "app",
+      "target": "app_eschtml",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L446",
+      "weight": 1.0
+    },
+    {
+      "source": "app",
+      "target": "app_confirmnewsession",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L451",
+      "weight": 1.0
+    },
+    {
+      "source": "app",
+      "target": "app_resetsession",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L458",
+      "weight": 1.0
+    },
+    {
+      "source": "app",
+      "target": "app_loaddevanagarifont",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L505",
+      "weight": 1.0
+    },
+    {
+      "source": "app",
+      "target": "app_arraybuffertobase64",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L519",
+      "weight": 1.0
+    },
+    {
+      "source": "app",
+      "target": "app_generatefilename",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L530",
+      "weight": 1.0
+    },
+    {
+      "source": "app",
+      "target": "app_generatepdf",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L542",
+      "weight": 1.0
+    },
+    {
+      "source": "app",
+      "target": "app_handleprint",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L692",
+      "weight": 1.0
+    },
+    {
+      "source": "app",
+      "target": "app_savetosupabase",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L753",
+      "weight": 1.0
+    },
+    {
+      "source": "app",
+      "target": "app_dataurltoblob",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L823",
+      "weight": 1.0
+    },
+    {
+      "source": "app_nameinput",
+      "target": "saral_kendra_code_app",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L18",
+      "weight": 1.0
+    },
+    {
+      "source": "app_aadhaarinput",
+      "target": "saral_kendra_code_app",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L19",
+      "weight": 1.0
+    },
+    {
+      "source": "app_checkexistingsession",
+      "target": "app_showwelcomeloggedin",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L30",
+      "weight": 1.0
+    },
+    {
+      "source": "app_checkexistingsession",
+      "target": "app_resolveusername",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L30",
+      "weight": 1.0
+    },
+    {
+      "source": "app_loginandstart",
+      "target": "saral_kendra_code_app",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L35",
+      "weight": 1.0
+    },
+    {
+      "source": "app_loginandstart",
+      "target": "app_showwelcomeerror",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L39",
+      "weight": 1.0
+    },
+    {
+      "source": "app_loginandstart",
+      "target": "app_hidewelcomeerror",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L49",
+      "weight": 1.0
+    },
+    {
+      "source": "app_loginandstart",
+      "target": "app_showwelcomeloggedin",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L61",
+      "weight": 1.0
+    },
+    {
+      "source": "app_loginandstart",
+      "target": "app_resolveusername",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L61",
+      "weight": 1.0
+    },
+    {
+      "source": "app_showwelcomeloggedin",
+      "target": "saral_kendra_code_app",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L70",
+      "weight": 1.0
+    },
+    {
+      "source": "app_showwelcomeerror",
+      "target": "saral_kendra_code_app",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L84",
+      "weight": 1.0
+    },
+    {
+      "source": "app_hidewelcomeerror",
+      "target": "saral_kendra_code_app",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L88",
+      "weight": 1.0
+    },
+    {
+      "source": "app_signoutmain",
+      "target": "saral_kendra_code_app",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L94",
+      "weight": 1.0
+    },
+    {
+      "source": "app_signoutmain",
+      "target": "app_hidewelcomeerror",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L98",
+      "weight": 1.0
+    },
+    {
+      "source": "app_signoutmain",
+      "target": "app_stopcamera",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L104",
+      "weight": 1.0
+    },
+    {
+      "source": "app_startapp",
+      "target": "saral_kendra_code_app",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L112",
+      "weight": 1.0
+    },
+    {
+      "source": "app_setupcamera",
+      "target": "saral_kendra_code_app",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L141",
+      "weight": 1.0
+    },
+    {
+      "source": "app_capturephoto",
+      "target": "app_showstatus",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L164",
+      "weight": 1.0
+    },
+    {
+      "source": "app_capturephoto",
+      "target": "saral_kendra_code_app",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L168",
+      "weight": 1.0
+    },
+    {
+      "source": "app_capturephoto",
+      "target": "app_flashscreen",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L184",
+      "weight": 1.0
+    },
+    {
+      "source": "app_capturephoto",
+      "target": "app_showtoast",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L208",
+      "weight": 1.0
+    },
+    {
+      "source": "app_capturephoto",
+      "target": "app_nameinput",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L209",
+      "weight": 1.0
+    },
+    {
+      "source": "app_confirmretake",
+      "target": "app_retakephoto",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L216",
+      "weight": 1.0
+    },
+    {
+      "source": "app_retakephoto",
+      "target": "saral_kendra_code_app",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L226",
+      "weight": 1.0
+    },
+    {
+      "source": "app_retakephoto",
+      "target": "app_clearform",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L245",
+      "weight": 1.0
+    },
+    {
+      "source": "app_retakephoto",
+      "target": "app_renderentries",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L246",
+      "weight": 1.0
+    },
+    {
+      "source": "app_retakephoto",
+      "target": "app_showtoast",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L247",
+      "weight": 1.0
+    },
+    {
+      "source": "app_handleaddperson",
+      "target": "app_showstatus",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L255",
+      "weight": 1.0
+    },
+    {
+      "source": "app_handleaddperson",
+      "target": "app_nameinput",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L259",
+      "weight": 1.0
+    },
+    {
+      "source": "app_handleaddperson",
+      "target": "app_aadhaarinput",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L260",
+      "weight": 1.0
+    },
+    {
+      "source": "app_handleaddperson",
+      "target": "app_validateentry",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L266",
+      "weight": 1.0
+    },
+    {
+      "source": "app_handleaddperson",
+      "target": "saral_kendra_code_app",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L272",
+      "weight": 1.0
+    },
+    {
+      "source": "app_handleaddperson",
+      "target": "app_clearform",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L278",
+      "weight": 1.0
+    },
+    {
+      "source": "app_handleaddperson",
+      "target": "app_renderentries",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L279",
+      "weight": 1.0
+    },
+    {
+      "source": "app_handleaddperson",
+      "target": "app_updateaadhaarhint",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L280",
+      "weight": 1.0
+    },
+    {
+      "source": "app_handleaddperson",
+      "target": "app_showtoast",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L281",
+      "weight": 1.0
+    },
+    {
+      "source": "app_editperson",
+      "target": "app_nameinput",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L287",
+      "weight": 1.0
+    },
+    {
+      "source": "app_editperson",
+      "target": "app_aadhaarinput",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L288",
+      "weight": 1.0
+    },
+    {
+      "source": "app_editperson",
+      "target": "saral_kendra_code_app",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L292",
+      "weight": 1.0
+    },
+    {
+      "source": "app_editperson",
+      "target": "app_updateaadhaarhint",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L296",
+      "weight": 1.0
+    },
+    {
+      "source": "app_editperson",
+      "target": "app_renderentries",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L297",
+      "weight": 1.0
+    },
+    {
+      "source": "app_canceledit",
+      "target": "app_clearform",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L304",
+      "weight": 1.0
+    },
+    {
+      "source": "app_canceledit",
+      "target": "saral_kendra_code_app",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L305",
+      "weight": 1.0
+    },
+    {
+      "source": "app_canceledit",
+      "target": "app_updateaadhaarhint",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L307",
+      "weight": 1.0
+    },
+    {
+      "source": "app_canceledit",
+      "target": "app_renderentries",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L308",
+      "weight": 1.0
+    },
+    {
+      "source": "app_deleteperson",
+      "target": "app_clearform",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L319",
+      "weight": 1.0
+    },
+    {
+      "source": "app_deleteperson",
+      "target": "saral_kendra_code_app",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L320",
+      "weight": 1.0
+    },
+    {
+      "source": "app_deleteperson",
+      "target": "app_renderentries",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L324",
+      "weight": 1.0
+    },
+    {
+      "source": "app_deleteperson",
+      "target": "app_updateaadhaarhint",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L325",
+      "weight": 1.0
+    },
+    {
+      "source": "app_renderentries",
+      "target": "saral_kendra_code_app",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L346",
+      "weight": 1.0
+    },
+    {
+      "source": "app_clearform",
+      "target": "app_nameinput",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L393",
+      "weight": 1.0
+    },
+    {
+      "source": "app_clearform",
+      "target": "app_aadhaarinput",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L394",
+      "weight": 1.0
+    },
+    {
+      "source": "app_clearform",
+      "target": "app_hidestatus",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L395",
+      "weight": 1.0
+    },
+    {
+      "source": "app_updateaadhaarhint",
+      "target": "saral_kendra_code_app",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L402",
+      "weight": 1.0
+    },
+    {
+      "source": "app_showstatus",
+      "target": "saral_kendra_code_app",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L421",
+      "weight": 1.0
+    },
+    {
+      "source": "app_hidestatus",
+      "target": "saral_kendra_code_app",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L428",
+      "weight": 1.0
+    },
+    {
+      "source": "app_showtoast",
+      "target": "saral_kendra_code_app",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L433",
+      "weight": 1.0
+    },
+    {
+      "source": "app_flashscreen",
+      "target": "saral_kendra_code_app",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L441",
+      "weight": 1.0
+    },
+    {
+      "source": "app_confirmnewsession",
+      "target": "app_resetsession",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L455",
+      "weight": 1.0
+    },
+    {
+      "source": "app_resetsession",
+      "target": "app_stopcamera",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L459",
+      "weight": 1.0
+    },
+    {
+      "source": "app_resetsession",
+      "target": "app_clearform",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L466",
+      "weight": 1.0
+    },
+    {
+      "source": "app_resetsession",
+      "target": "app_renderentries",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L467",
+      "weight": 1.0
+    },
+    {
+      "source": "app_resetsession",
+      "target": "app_updateaadhaarhint",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L468",
+      "weight": 1.0
+    },
+    {
+      "source": "app_resetsession",
+      "target": "saral_kendra_code_app",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L471",
+      "weight": 1.0
+    },
+    {
+      "source": "app_resetsession",
+      "target": "app_setupcamera",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L493",
+      "weight": 1.0
+    },
+    {
+      "source": "app_resetsession",
+      "target": "app_showtoast",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L494",
+      "weight": 1.0
+    },
+    {
+      "source": "app_loaddevanagarifont",
+      "target": "app_arraybuffertobase64",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L512",
+      "weight": 1.0
+    },
+    {
+      "source": "app_handleprint",
+      "target": "app_showtoast",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L694",
+      "weight": 1.0
+    },
+    {
+      "source": "app_handleprint",
+      "target": "saral_kendra_code_app",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L702",
+      "weight": 1.0
+    },
+    {
+      "source": "app_handleprint",
+      "target": "app_generatefilename",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L707",
+      "weight": 1.0
+    },
+    {
+      "source": "app_handleprint",
+      "target": "app_generatepdf",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L708",
+      "weight": 1.0
+    },
+    {
+      "source": "app_handleprint",
+      "target": "app_showstatus",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L725",
+      "weight": 1.0
+    },
+    {
+      "source": "app_handleprint",
+      "target": "app_savetosupabase",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L726",
+      "weight": 1.0
+    },
+    {
+      "source": "app_handleprint",
+      "target": "app_hidestatus",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L729",
+      "weight": 1.0
+    },
+    {
+      "source": "app_savetosupabase",
+      "target": "app_dataurltoblob",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L774",
+      "weight": 1.0
+    },
+    {
+      "source": "app_savetosupabase",
+      "target": "app_resolveusername",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L796",
+      "weight": 1.0
+    },
+    {
+      "source": "supabase",
+      "target": "supabase_db",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "supabase.js",
+      "source_location": "L88",
+      "weight": 1.0
+    }
+  ],
+  "input_tokens": 0,
+  "output_tokens": 0
+}
