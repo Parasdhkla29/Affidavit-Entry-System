@@ -109,6 +109,20 @@ body {
   box-shadow: 0 8px 32px rgba(79,70,229,.5);
 }
 .btn-start:active { transform: translateY(0); }
+/* ── Password reveal toggle ─────────────────────────────────────────── */
+.pw-wrap {
+  position: relative; display: flex; align-items: center; width: 100%;
+}
+.pw-wrap input { width: 100%; padding-right: 44px; }
+.pw-toggle {
+  position: absolute; right: 0; top: 0; bottom: 0;
+  width: 42px; background: none; border: none;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  color: var(--text-3); transition: color var(--transition); padding: 0;
+}
+.pw-toggle:hover { color: var(--indigo); }
+.pw-toggle svg { width: 18px; height: 18px; pointer-events: none; }
+
 /* ── Welcome login form ──────────────────────────────────────────────── */
 .welcome-fields {
   display: flex; flex-direction: column; gap: 10px;

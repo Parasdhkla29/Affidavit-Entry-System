@@ -4,6 +4,14 @@
 
 const $a = id => document.getElementById(id);
 
+function togglePassword(inputId, btn) {
+  const input = document.getElementById(inputId);
+  const isHidden = input.type === 'password';
+  input.type = isHidden ? 'text' : 'password';
+  btn.querySelector('.eye-icon').style.display     = isHidden ? 'none' : '';
+  btn.querySelector('.eye-off-icon').style.display = isHidden ? ''     : 'none';
+}
+
 let allSessions   = [];   // full list for client-side filter
 let searchTimer   = null;
 
