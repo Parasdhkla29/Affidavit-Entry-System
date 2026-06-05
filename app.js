@@ -753,7 +753,13 @@ function generatePrintHTML() {
   }
 </style>
 </head>
-<body onload="window.print()">
+<body>
+<script>
+  // Wait until Noto Sans Devanagari is fully loaded before printing
+  document.fonts.ready.then(function() {
+    setTimeout(function() { window.print(); }, 400);
+  });
+</script>
   <img class="photo" src="${state.sessionPhoto}" alt="Photo">
   <p class="centre-line">${dateStr} / SARAL CENTRE NILOKHERI</p>
   <table>
