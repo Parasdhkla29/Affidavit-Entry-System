@@ -718,34 +718,16 @@ function generatePrintHTML() {
     </tr>`;
   }).join('');
 
-  // Embed the already-downloaded Noto font directly as base64 — no network
-  // request in the popup, guaranteed to be available before print fires.
-  const fontFaceBlock = _devFont
-    ? `@font-face {
-        font-family: 'NotoDevanagari';
-        src: url('data:font/truetype;base64,${_devFont}') format('truetype');
-        font-weight: normal;
-      }
-      @font-face {
-        font-family: 'NotoDevanagari';
-        src: url('data:font/truetype;base64,${_devFont}') format('truetype');
-        font-weight: bold;
-      }`
-    : `/* Noto not preloaded — falling back to system fonts */`;
-
-  const bodyFont = _devFont
-    ? `'NotoDevanagari', Arial, sans-serif`
-    : `'Arial Unicode MS', Arial, sans-serif`;
-
   return `<!DOCTYPE html>
 <html lang="hi">
 <head>
 <meta charset="UTF-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;700&display=swap" rel="stylesheet">
 <style>
-  ${fontFaceBlock}
   * { margin:0; padding:0; box-sizing:border-box; }
   body {
-    font-family: ${bodyFont};
+    font-family: 'Noto Sans Devanagari', 'Nirmala UI', 'Mangal', sans-serif;
     font-size: 8pt; color: #000;
     padding: 18mm 14mm 14mm;
   }
@@ -779,11 +761,17 @@ function generatePrintHTML() {
 </head>
 <body>
 <script>
-  // Font is embedded as base64 — document.fonts.ready resolves instantly.
-  // Small timeout ensures the browser has painted before print dialog opens.
-  document.fonts.ready.then(function() {
-    setTimeout(function() { window.print(); }, 200);
-  });
+  // Poll until Noto Sans Devanagari is ready, then print.
+  // Falls back to printing after 4 s (Nirmala UI system font handles Hindi).
+  var _deadline = Date.now() + 4000;
+  function _tryPrint() {
+    if (document.fonts.check('400 1em "Noto Sans Devanagari"') || Date.now() > _deadline) {
+      window.print();
+    } else {
+      setTimeout(_tryPrint, 80);
+    }
+  }
+  document.fonts.ready.then(function() { _tryPrint(); });
 </script>
   <img class="photo" src="${state.sessionPhoto}" alt="Photo">
   <p class="centre-line">${dateStr} / SARAL CENTRE NILOKHERI</p>
