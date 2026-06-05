@@ -505,8 +505,7 @@ let _devFont = null;
 async function loadDevanagariFont() {
   if (_devFont) return;
   try {
-    const url = 'https://cdn.jsdelivr.net/gh/googlefonts/noto-fonts@main' +
-                '/hinted/ttf/NotoSansDevanagari/NotoSansDevanagari-Regular.ttf';
+    const url = 'https://raw.githubusercontent.com/Parasdhkla29/Affidavit-Entry-System/main/hindi.TTF';
     const res = await fetch(url);
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     _devFont = arrayBufferToBase64(await res.arrayBuffer());
