@@ -687,6 +687,92 @@ function generatePDF() {
 }
 
 /* =====================================================================
+   HTML PRINT LAYOUT
+   Uses browser's own text rendering — handles Hindi/Devanagari perfectly.
+   jsPDF is kept only for the Supabase storage copy.
+   ===================================================================== */
+function generatePrintHTML() {
+  const dateStr = new Date().toLocaleString('en-IN', {
+    day: '2-digit', month: '2-digit', year: 'numeric',
+    hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false
+  });
+
+  const fmtAadhaar = a => (a || '').replace(/(\d{4})(\d{4})(\d{4})/, '$1 $2 $3');
+
+  const rows = persons.map((p, i) => {
+    const aadhaarCell = (i === 0 && !p.aadhaar) ? '' : fmtAadhaar(p.aadhaar);
+    const roleText    = i === 0
+      ? '<div class="role">Advocate/Numberdar/Sarpanch/Panch</div>'
+      : '';
+    return `<tr class="${i === 0 ? 'row-first' : ''}">
+      <td class="td-sr">${i + 1}</td>
+      <td class="td-name"><strong>${escHtml(p.name)}</strong>${roleText}</td>
+      <td class="td-aadh">${escHtml(aadhaarCell)}</td>
+      <td class="td-sig"></td>
+    </tr>`;
+  }).join('');
+
+  return `<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: 'Noto Sans Devanagari', Arial, sans-serif;
+    font-size: 8pt; color: #000;
+    padding: 18mm 14mm 14mm;
+  }
+  .photo {
+    display: block; width: 150mm; height: 65mm;
+    object-fit: cover; margin: 0 auto 4mm;
+  }
+  .centre-line {
+    text-align: center; font-size: 6pt; color: #333; margin-bottom: 10mm;
+  }
+  table { width: 100%; border-collapse: collapse; font-size: 7.5pt; }
+  thead th {
+    text-align: left; font-weight: bold; padding: 0 2mm 2mm 0;
+    border-bottom: 0.6pt solid #000;
+  }
+  .td-sr   { width: 10mm; padding: 2.5mm 1mm; vertical-align: top; }
+  .td-name { width: 72mm; padding: 2.5mm 2mm; vertical-align: top; }
+  .td-aadh { width: 48mm; padding: 2.5mm 2mm; vertical-align: top; letter-spacing: 0.5pt; }
+  .td-sig  { padding: 2.5mm 2mm; vertical-align: bottom; border-bottom: 0.5pt solid #000; }
+  .role    { font-size: 5.5pt; font-style: italic; font-weight: normal; margin-top: 1.5mm; }
+  .row-first td { padding-bottom: 5mm; }
+  .footer-line {
+    position: fixed; bottom: 10mm; left: 14mm; right: 14mm;
+    border-bottom: 0.7pt solid #000;
+  }
+  @media print {
+    body { padding: 12mm 12mm 10mm; }
+    .footer-line { position: fixed; bottom: 8mm; left: 12mm; right: 12mm; }
+  }
+</style>
+</head>
+<body onload="window.print()">
+  <img class="photo" src="${state.sessionPhoto}" alt="Photo">
+  <p class="centre-line">${dateStr} / SARAL CENTRE NILOKHERI</p>
+  <table>
+    <thead>
+      <tr>
+        <th class="td-sr">SR.</th>
+        <th class="td-name">NAME</th>
+        <th class="td-aadh">AADHAR NUMBER</th>
+        <th class="td-sig">SIGNATURE</th>
+      </tr>
+    </thead>
+    <tbody>${rows}</tbody>
+  </table>
+  <div class="footer-line"></div>
+</body>
+</html>`;
+}
+
+/* =====================================================================
    PRINT PDF HANDLER
    ===================================================================== */
 async function handlePrint() {
@@ -700,47 +786,45 @@ async function handlePrint() {
   }
 
   const btn = $('printBtn');
-  btn.disabled     = true;
-  btn.innerHTML    = '<span class="btn-icon">⏳</span> PREPARING...';
+  btn.disabled  = true;
+  btn.innerHTML = '<span class="btn-icon">⏳</span> PREPARING...';
 
   try {
     const fileName = generateFileName();
-    const doc      = generatePDF();
 
-    // embed auto-print action
-    doc.autoPrint();
+    // ── 1. Open HTML print view — perfect Hindi rendering ──────────────
+    const html     = generatePrintHTML();
+    const htmlBlob = new Blob([html], { type: 'text/html;charset=utf-8' });
+    const htmlUrl  = URL.createObjectURL(htmlBlob);
+    const printWin = window.open(htmlUrl, '_blank');
 
-    const pdfBlob = doc.output('blob');
-    const blobUrl = URL.createObjectURL(pdfBlob);
-
-    // ── Open print dialog immediately (synchronous, inside user gesture) ──
-    const printWin = window.open(blobUrl, '_blank');
     if (!printWin) {
-      // Popup blocked fallback
-      doc.save(fileName);
-      showToast('Pop-up was blocked. PDF downloaded instead. Allow pop-ups for direct printing.', 'warning');
+      showToast('Pop-up blocked. Please allow pop-ups and try again.', 'warning');
+      btn.disabled  = false;
+      btn.innerHTML = '<span class="btn-icon">🖨️</span> PRINT PDF';
+      return;
     }
 
-    // ── Save to Supabase asynchronously ───────────────────────────────────
+    setTimeout(() => URL.revokeObjectURL(htmlUrl), 120000);
+
+    // ── 2. Save PDF copy to Supabase (async, after print opens) ────────
     showStatus('Saving to admin dashboard…', 'info');
-    const result = await saveToSupabase(pdfBlob, fileName);
+    const doc     = generatePDF();
+    const pdfBlob = doc.output('blob');
+    const result  = await saveToSupabase(pdfBlob, fileName);
 
     if (result.success) {
       hideStatus();
-      showToast('Document saved to admin dashboard and print command opened.', 'success');
+      showToast('Document saved to admin dashboard and print dialog opened.', 'success');
     } else {
-      const errDetail = result.error?.message || result.error?.error_description || JSON.stringify(result.error) || 'Unknown error';
+      const errDetail = result.error?.message || JSON.stringify(result.error) || 'Unknown error';
       showStatus(`Save failed: ${errDetail}`, 'error');
-      showToast(`Admin save failed: ${errDetail}`, 'error');
-      console.error('Full save error:', result.error);
+      console.error('Supabase save error:', result.error);
     }
-
-    // Revoke URL after 2 min
-    setTimeout(() => URL.revokeObjectURL(blobUrl), 120000);
 
   } catch (err) {
     console.error('Print error:', err);
-    showToast('An error occurred while generating the PDF. Check console.', 'error');
+    showToast('An error occurred. Check console.', 'error');
   } finally {
     btn.disabled  = false;
     btn.innerHTML = '<span class="btn-icon">🖨️</span> PRINT PDF';
