@@ -728,7 +728,7 @@ function generatePrintHTML(options = {}) {
     font-family: 'NotoDevanagari', 'Nirmala UI', 'Mangal', sans-serif;
     font-size: 11pt; color: #000;
     width: 210mm; min-height: 297mm;
-    padding: 16mm 12mm 12mm;
+    padding: 24mm 12mm 12mm;
     background: #fff;
   }
   .photo {
@@ -754,7 +754,7 @@ function generatePrintHTML(options = {}) {
     border-bottom: 0.7pt solid #000;
   }
   @media print {
-    body { padding: 16mm 12mm 12mm; }
+    body { padding: 24mm 12mm 12mm; }
     .footer-line { position: fixed; bottom: 8mm; left: 12mm; right: 12mm; }
   }
 </style>
