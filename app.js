@@ -712,16 +712,29 @@ function generatePrintHTML() {
     </tr>`;
   }).join('');
 
+  // Embed the already-downloaded Noto font directly as base64 — no network
+  // request in the popup, guaranteed to be available before print fires.
+  const fontFaceBlock = _devFont
+    ? `@font-face {
+        font-family: 'NotoDevanagari';
+        src: url('data:font/truetype;base64,${_devFont}') format('truetype');
+        font-weight: 400 700;
+      }`
+    : `/* Noto not preloaded — falling back to system fonts */`;
+
+  const bodyFont = _devFont
+    ? `'NotoDevanagari', Arial, sans-serif`
+    : `'Arial Unicode MS', Arial, sans-serif`;
+
   return `<!DOCTYPE html>
 <html lang="hi">
 <head>
 <meta charset="UTF-8">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;700&display=swap" rel="stylesheet">
 <style>
+  ${fontFaceBlock}
   * { margin:0; padding:0; box-sizing:border-box; }
   body {
-    font-family: 'Noto Sans Devanagari', Arial, sans-serif;
+    font-family: ${bodyFont};
     font-size: 8pt; color: #000;
     padding: 18mm 14mm 14mm;
   }
@@ -755,9 +768,10 @@ function generatePrintHTML() {
 </head>
 <body>
 <script>
-  // Wait until Noto Sans Devanagari is fully loaded before printing
+  // Font is embedded as base64 — document.fonts.ready resolves instantly.
+  // Small timeout ensures the browser has painted before print dialog opens.
   document.fonts.ready.then(function() {
-    setTimeout(function() { window.print(); }, 400);
+    setTimeout(function() { window.print(); }, 200);
   });
 </script>
   <img class="photo" src="${state.sessionPhoto}" alt="Photo">
