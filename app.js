@@ -513,21 +513,23 @@ function arrayBufferToBase64(buf) {
    PDF GENERATION
    ===================================================================== */
 function generateFileName() {
-  // Allow A-Z, a-z, 0-9, and full Devanagari Unicode block (U+0900–U+097F)
+  // Remove only the 9 filesystem-unsafe chars. Keeps Devanagari, Latin, digits, etc.
   const toSafe = str => str
-    .replace(/[^A-Za-z0-9ऀ-ॿ]/g, '_')
+    .replace(/[/\\:*?"<>|]/g, '')
+    .replace(/\s+/g, '_')
     .replace(/_+/g, '_')
-    .replace(/^_|_$/g, '');
+    .replace(/^_|_$/g, '')
+    .substring(0, 100);
 
   if (persons.length >= 2) {
     const safe = toSafe(persons[1].name);
-    return safe ? `${safe}.pdf` : `AFFIDAVIT_${Date.now()}.pdf`;
+    return (safe || toSafe(persons[0].name) || 'SESSION') + '.pdf';
   }
   if (persons.length === 1) {
     const safe = toSafe(persons[0].name);
-    return `AFFIDAVIT_${safe || Date.now()}.pdf`;
+    return 'AFFIDAVIT_' + (safe || Date.now()) + '.pdf';
   }
-  return `AFFIDAVIT_SESSION_${Date.now()}.pdf`;
+  return 'AFFIDAVIT_SESSION_' + Date.now() + '.pdf';
 }
 
 function generatePDF() {
