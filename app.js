@@ -502,16 +502,13 @@ function resetSession() {
    ===================================================================== */
 let _devFont = null;
 
-async function loadDevanagariFont() {
+function loadDevanagariFont() {
   if (_devFont) return;
-  try {
-    const url = 'https://raw.githubusercontent.com/Parasdhkla29/Affidavit-Entry-System/main/NotoSansDevanagari.ttf';
-    const res = await fetch(url);
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    _devFont = arrayBufferToBase64(await res.arrayBuffer());
-    console.log('Devanagari font ready.');
-  } catch (e) {
-    console.warn('Devanagari font could not load — Hindi text may show as boxes in PDF:', e.message);
+  if (window._DEV_FONT_B64) {
+    _devFont = window._DEV_FONT_B64;
+    console.log('Devanagari font ready (embedded).');
+  } else {
+    console.warn('Devanagari font not available — Hindi text may show as boxes.');
   }
 }
 
