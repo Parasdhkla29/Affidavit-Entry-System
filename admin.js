@@ -33,6 +33,13 @@ document.addEventListener('DOMContentLoaded', async () => {
   showDashboard(resolveAdminUsername(user.email));
   loadSessions();
 
+  // Auto-refresh: reload table whenever a new session is saved from main app
+  db.channel('admin-live')
+    .on('postgres_changes',
+        { event: 'INSERT', schema: 'public', table: 'affidavit_sessions' },
+        () => loadSessions())
+    .subscribe();
+
   $a('sessionModal').addEventListener('click', e => {
     if (e.target === $a('sessionModal')) closeModal();
   });
