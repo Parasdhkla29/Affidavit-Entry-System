@@ -502,13 +502,23 @@ function resetSession() {
    ===================================================================== */
 let _devFont = null;
 
-function loadDevanagariFont() {
+async function loadDevanagariFont() {
   if (_devFont) return;
   if (window._DEV_FONT_B64) {
     _devFont = window._DEV_FONT_B64;
     console.log('Devanagari font ready (embedded).');
-  } else {
-    console.warn('Devanagari font not available — Hindi text may show as boxes.');
+    return;
+  }
+  // Fallback: fetch from CDN if embedded font not available
+  try {
+    const url = 'https://cdn.jsdelivr.net/gh/googlefonts/noto-fonts@main' +
+                '/hinted/ttf/NotoSansDevanagari/NotoSansDevanagari-Regular.ttf';
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    _devFont = arrayBufferToBase64(await res.arrayBuffer());
+    console.log('Devanagari font ready (CDN fallback).');
+  } catch (e) {
+    console.warn('Devanagari font could not load — Hindi text may show incorrectly:', e.message);
   }
 }
 
@@ -714,7 +724,12 @@ function generatePrintHTML() {
     ? `@font-face {
         font-family: 'NotoDevanagari';
         src: url('data:font/truetype;base64,${_devFont}') format('truetype');
-        font-weight: 400 700;
+        font-weight: normal;
+      }
+      @font-face {
+        font-family: 'NotoDevanagari';
+        src: url('data:font/truetype;base64,${_devFont}') format('truetype');
+        font-weight: bold;
       }`
     : `/* Noto not preloaded — falling back to system fonts */`;
 
