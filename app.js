@@ -748,7 +748,15 @@ function generatePrintHTML(options = {}) {
   .td-sr   { width: 10mm; padding: 2.5mm 1mm; vertical-align: top; }
   .td-name { width: 72mm; padding: 2.5mm 2mm; vertical-align: top; }
   .td-aadh { width: 48mm; padding: 2.5mm 2mm; vertical-align: top; letter-spacing: 0.5pt; }
-  .td-sig  { padding: 2.5mm 2mm; vertical-align: bottom; border-bottom: 0.5pt solid #000; }
+  .td-sig  { width: 48mm; padding: 2.5mm 0 2.5mm 2mm; vertical-align: bottom; }
+  tbody .td-sig::after {
+    content: '';
+    display: block;
+    width: 44mm;
+    max-width: 100%;
+    border-bottom: 0.5pt solid #000;
+    margin-left: auto;
+  }
   .role    { font-size: 8pt; font-style: italic; font-weight: normal; margin-top: 1.5mm; }
   .row-first td { padding-bottom: 5mm; }
   .footer-line {
