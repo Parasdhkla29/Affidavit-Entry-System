@@ -726,9 +726,9 @@ function generatePrintHTML(options = {}) {
   html { font-size: 11pt; background: #fff; }
   body {
     font-family: 'NotoDevanagari', 'Nirmala UI', 'Mangal', sans-serif;
-    font-size: 11pt; color: #000;
+    font-size: 11pt; line-height: 1.35; color: #000;
     width: 210mm; min-height: 297mm;
-    padding: 24mm 12mm 12mm;
+    padding: 32mm 12mm 12mm;
     background: #fff;
   }
   .photo {
@@ -739,6 +739,8 @@ function generatePrintHTML(options = {}) {
     text-align: center; font-size: 8pt; color: #333; margin-bottom: 10mm;
   }
   table { width: 100%; border-collapse: collapse; font-size: 11pt; }
+  thead th, tbody td { font-size: 11pt; line-height: 1.35; }
+  .td-name strong { font-size: 11pt; font-weight: bold; }
   thead th {
     text-align: left; font-weight: bold; padding: 0 2mm 2mm 0;
     border-bottom: 0.6pt solid #000;
@@ -754,7 +756,7 @@ function generatePrintHTML(options = {}) {
     border-bottom: 0.7pt solid #000;
   }
   @media print {
-    body { padding: 24mm 12mm 12mm; }
+    body { padding: 32mm 12mm 12mm; }
     .footer-line { position: fixed; bottom: 8mm; left: 12mm; right: 12mm; }
   }
 </style>
