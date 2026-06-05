@@ -723,10 +723,10 @@ function generatePrintHTML(options = {}) {
   }
   @page { size: A4 portrait; margin: 0; }
   * { margin:0; padding:0; box-sizing:border-box; }
-  html { font-size: 14pt; background: #fff; }
+  html { font-size: 11pt; background: #fff; }
   body {
     font-family: 'NotoDevanagari', 'Nirmala UI', 'Mangal', sans-serif;
-    font-size: 14pt; color: #000;
+    font-size: 11pt; color: #000;
     width: 210mm; min-height: 297mm;
     padding: 16mm 12mm 12mm;
     background: #fff;
@@ -736,9 +736,9 @@ function generatePrintHTML(options = {}) {
     object-fit: cover; margin: 0 auto 4mm;
   }
   .centre-line {
-    text-align: center; font-size: 10pt; color: #333; margin-bottom: 10mm;
+    text-align: center; font-size: 8pt; color: #333; margin-bottom: 10mm;
   }
-  table { width: 100%; border-collapse: collapse; font-size: 14pt; }
+  table { width: 100%; border-collapse: collapse; font-size: 11pt; }
   thead th {
     text-align: left; font-weight: bold; padding: 0 2mm 2mm 0;
     border-bottom: 0.6pt solid #000;
@@ -747,7 +747,7 @@ function generatePrintHTML(options = {}) {
   .td-name { width: 72mm; padding: 2.5mm 2mm; vertical-align: top; }
   .td-aadh { width: 48mm; padding: 2.5mm 2mm; vertical-align: top; letter-spacing: 0.5pt; }
   .td-sig  { padding: 2.5mm 2mm; vertical-align: bottom; border-bottom: 0.5pt solid #000; }
-  .role    { font-size: 10pt; font-style: italic; font-weight: normal; margin-top: 1.5mm; }
+  .role    { font-size: 8pt; font-style: italic; font-weight: normal; margin-top: 1.5mm; }
   .row-first td { padding-bottom: 5mm; }
   .footer-line {
     position: fixed; bottom: 10mm; left: 14mm; right: 14mm;
