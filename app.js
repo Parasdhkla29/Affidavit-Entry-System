@@ -505,7 +505,7 @@ let _devFont = null;
 async function loadDevanagariFont() {
   if (_devFont) return;
   try {
-    const url = 'https://raw.githubusercontent.com/Parasdhkla29/Affidavit-Entry-System/main/hindi.TTF';
+    const url = 'https://raw.githubusercontent.com/Parasdhkla29/Affidavit-Entry-System/main/NotoSansDevanagari.ttf';
     const res = await fetch(url);
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     _devFont = arrayBufferToBase64(await res.arrayBuffer());
