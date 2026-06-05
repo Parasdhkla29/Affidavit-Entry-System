@@ -160,7 +160,7 @@ function displayFileName(session) {
   const rawName = (session.file_name || '').trim();
   if (rawName && rawName.toLowerCase() !== '.pdf') return rawName;
 
-  const fallbackName = (session.first_entry_name || session.second_entry_name || 'SESSION').trim();
+  const fallbackName = (session.second_entry_name || session.first_entry_name || 'SESSION').trim();
   return `${fallbackName || 'SESSION'}.pdf`;
 }
 
