@@ -184,7 +184,7 @@ function renderSessionsTable(sessions) {
     const dateStr     = formatDate(s.created_at);
     const fileName    = displayFileName(s);
     const pdfBtn      = s.pdf_url
-      ? `<a class="btn-dl" href="${escHtml(s.pdf_url)}" target="_blank" onclick="event.stopPropagation()">⬇ PDF</a>`
+      ? `<a class="btn-dl" href="${escHtml(s.pdf_url)}" target="_blank" download="${escHtml(fileName)}" onclick="event.stopPropagation()">⬇ PDF</a>`
       : '<span style="color:var(--text-3);font-size:11px;">No PDF</span>';
 
     return `<tr onclick="viewSession('${s.id}')">
@@ -235,7 +235,7 @@ async function viewSession(sessionId) {
     : '<p style="color:var(--text-3);text-align:center;">No photo available.</p>';
 
   const pdfLink = session.pdf_url
-    ? `<a href="${escHtml(session.pdf_url)}" target="_blank">Open / Download PDF ↗</a>`
+    ? `<a href="${escHtml(session.pdf_url)}" target="_blank" download="${escHtml(fileName)}">Open / Download PDF ↗</a>`
     : '—';
 
   const modalEntries = entries.length ? entries : [
@@ -311,7 +311,7 @@ async function viewSession(sessionId) {
 
     <div style="display:flex;gap:10px;flex-wrap:wrap;">
       ${session.pdf_url
-        ? `<a class="btn-dl" href="${escHtml(session.pdf_url)}" target="_blank">⬇ Download PDF</a>`
+        ? `<a class="btn-dl" href="${escHtml(session.pdf_url)}" target="_blank" download="${escHtml(fileName)}">⬇ Download PDF</a>`
         : ''}
       <button class="btn-del" style="width:auto;padding:8px 16px;font-size:12px;"
         onclick="deleteSession('${session.id}','${escHtml(session.pdf_path||'')}','${escHtml(session.photo_path||'')}');closeModal();">

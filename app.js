@@ -528,18 +528,7 @@ function generateFileName() {
 }
 
 function generateStorageFileName(fileName, ts) {
-  const asciiName = (fileName || '')
-    .normalize('NFKD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .replace(/[^\w.-]+/g, '_')
-    .replace(/_+/g, '_')
-    .replace(/^_+|_+$/g, '');
-
-  const safeName = asciiName && asciiName.toLowerCase() !== '.pdf'
-    ? asciiName
-    : `AFFIDAVIT_${ts}.pdf`;
-
-  return safeName.toLowerCase().endsWith('.pdf') ? safeName : `${safeName}.pdf`;
+  return `AFFIDAVIT_${ts}.pdf`;
 }
 
 function generatePDF() {
@@ -694,7 +683,8 @@ function generatePDF() {
    Uses browser's own text rendering — handles Hindi/Devanagari perfectly.
    jsPDF is kept only for the Supabase storage copy.
    ===================================================================== */
-function generatePrintHTML() {
+function generatePrintHTML(options = {}) {
+  const { autoPrint = true, title = generateFileName() } = options;
   const dateStr = new Date().toLocaleString('en-IN', {
     day: '2-digit', month: '2-digit', year: 'numeric',
     hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false
@@ -719,6 +709,7 @@ function generatePrintHTML() {
 <html lang="hi">
 <head>
 <meta charset="UTF-8">
+<title>${escHtml(title)}</title>
 <style>
   @font-face {
     font-family: 'NotoDevanagari';
@@ -730,21 +721,24 @@ function generatePrintHTML() {
     src: url('data:font/truetype;base64,${_devFont}') format('truetype');
     font-weight: bold;
   }
+  @page { size: A4 portrait; margin: 0; }
   * { margin:0; padding:0; box-sizing:border-box; }
-  html { font-size: 14px; }
+  html { font-size: 14pt; background: #fff; }
   body {
     font-family: 'NotoDevanagari', 'Nirmala UI', 'Mangal', sans-serif;
-    font-size: 14px; color: #000;
-    padding: 18mm 14mm 14mm;
+    font-size: 14pt; color: #000;
+    width: 210mm; min-height: 297mm;
+    padding: 16mm 12mm 12mm;
+    background: #fff;
   }
   .photo {
     display: block; width: 150mm; height: 65mm;
     object-fit: cover; margin: 0 auto 4mm;
   }
   .centre-line {
-    text-align: center; font-size: 11px; color: #333; margin-bottom: 10mm;
+    text-align: center; font-size: 10pt; color: #333; margin-bottom: 10mm;
   }
-  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  table { width: 100%; border-collapse: collapse; font-size: 14pt; }
   thead th {
     text-align: left; font-weight: bold; padding: 0 2mm 2mm 0;
     border-bottom: 0.6pt solid #000;
@@ -753,24 +747,25 @@ function generatePrintHTML() {
   .td-name { width: 72mm; padding: 2.5mm 2mm; vertical-align: top; }
   .td-aadh { width: 48mm; padding: 2.5mm 2mm; vertical-align: top; letter-spacing: 0.5pt; }
   .td-sig  { padding: 2.5mm 2mm; vertical-align: bottom; border-bottom: 0.5pt solid #000; }
-  .role    { font-size: 10px; font-style: italic; font-weight: normal; margin-top: 1.5mm; }
+  .role    { font-size: 10pt; font-style: italic; font-weight: normal; margin-top: 1.5mm; }
   .row-first td { padding-bottom: 5mm; }
   .footer-line {
     position: fixed; bottom: 10mm; left: 14mm; right: 14mm;
     border-bottom: 0.7pt solid #000;
   }
   @media print {
-    body { padding: 12mm 12mm 10mm; }
+    body { padding: 16mm 12mm 12mm; }
     .footer-line { position: fixed; bottom: 8mm; left: 12mm; right: 12mm; }
   }
 </style>
 </head>
 <body>
+${autoPrint ? `
 <script>
   document.fonts.ready.then(function() {
     setTimeout(function() { window.print(); }, 200);
   });
-</script>
+</script>` : ''}
   <img class="photo" src="${state.sessionPhoto}" alt="Photo">
   <p class="centre-line">${dateStr} / SARAL CENTRE NILOKHERI</p>
   <table>
@@ -787,6 +782,81 @@ function generatePrintHTML() {
   <div class="footer-line"></div>
 </body>
 </html>`;
+}
+
+async function waitForPrintDocument(doc) {
+  if (doc.fonts?.ready) await doc.fonts.ready;
+
+  const images = Array.from(doc.images || []);
+  await Promise.all(images.map(img => {
+    if (img.complete) return Promise.resolve();
+    return new Promise(resolve => {
+      img.onload = resolve;
+      img.onerror = resolve;
+    });
+  }));
+}
+
+async function renderPrintPdfBlob(fileName) {
+  if (!window.html2canvas) {
+    throw new Error('PDF renderer not loaded. Please refresh and try again.');
+  }
+
+  const iframe = document.createElement('iframe');
+  iframe.style.position = 'fixed';
+  iframe.style.left = '-10000px';
+  iframe.style.top = '0';
+  iframe.style.width = '210mm';
+  iframe.style.height = '297mm';
+  iframe.style.border = '0';
+  iframe.setAttribute('aria-hidden', 'true');
+  document.body.appendChild(iframe);
+
+  try {
+    const printDoc = iframe.contentDocument;
+    printDoc.open();
+    printDoc.write(generatePrintHTML({ autoPrint: false, title: fileName }));
+    printDoc.close();
+
+    await waitForPrintDocument(printDoc);
+
+    const canvas = await html2canvas(printDoc.body, {
+      backgroundColor: '#ffffff',
+      scale: 2,
+      useCORS: true,
+      width: printDoc.body.scrollWidth,
+      height: printDoc.body.scrollHeight,
+      windowWidth: printDoc.documentElement.scrollWidth,
+      windowHeight: printDoc.documentElement.scrollHeight,
+    });
+
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF('p', 'mm', 'a4');
+    const pageW = 210;
+    const pageH = 297;
+    const pageSliceH = Math.floor(canvas.width * (pageH / pageW));
+
+    for (let y = 0, page = 0; y < canvas.height; y += pageSliceH, page++) {
+      const sliceH = Math.min(pageSliceH, canvas.height - y);
+      const pageCanvas = document.createElement('canvas');
+      pageCanvas.width = canvas.width;
+      pageCanvas.height = sliceH;
+      pageCanvas.getContext('2d').drawImage(
+        canvas,
+        0, y, canvas.width, sliceH,
+        0, 0, canvas.width, sliceH
+      );
+
+      if (page > 0) pdf.addPage();
+      const imgData = pageCanvas.toDataURL('image/jpeg', 0.95);
+      const imgH = sliceH * pageW / canvas.width;
+      pdf.addImage(imgData, 'JPEG', 0, 0, pageW, imgH);
+    }
+
+    return pdf.output('blob');
+  } finally {
+    iframe.remove();
+  }
 }
 
 /* =====================================================================
@@ -828,8 +898,7 @@ async function handlePrint() {
     let pdfBlob = null;
     let pdfError = null;
     try {
-      const doc = generatePDF();
-      pdfBlob = doc.output('blob');
+      pdfBlob = await renderPrintPdfBlob(fileName);
     } catch (err) {
       pdfError = err;
       console.error('PDF render error:', err);
@@ -837,11 +906,9 @@ async function handlePrint() {
 
     const result = await saveToSupabase(pdfBlob, fileName, { pdfError });
 
-    const html     = generatePrintHTML();
-    const htmlBlob = new Blob([html], { type: 'text/html;charset=utf-8' });
-    const htmlUrl  = URL.createObjectURL(htmlBlob);
-    printWin.location.href = htmlUrl;
-    setTimeout(() => URL.revokeObjectURL(htmlUrl), 120000);
+    printWin.document.open();
+    printWin.document.write(generatePrintHTML({ autoPrint: true, title: fileName }));
+    printWin.document.close();
 
     if (result.success) {
       hideStatus();
