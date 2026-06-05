@@ -513,23 +513,33 @@ function arrayBufferToBase64(buf) {
    PDF GENERATION
    ===================================================================== */
 function generateFileName() {
-  // Remove only the 9 filesystem-unsafe chars. Keeps Devanagari, Latin, digits, etc.
-  const toSafe = str => str
+  // Remove only filesystem-unsafe chars. Keeps Devanagari, Latin, digits, etc.
+  const toSafe = str => (str || '')
+    .trim()
     .replace(/[/\\:*?"<>|]/g, '')
     .replace(/\s+/g, '_')
     .replace(/_+/g, '_')
     .replace(/^_|_$/g, '')
     .substring(0, 100);
 
-  if (persons.length >= 2) {
-    const safe = toSafe(persons[1].name);
-    return (safe || toSafe(persons[0].name) || 'SESSION') + '.pdf';
-  }
-  if (persons.length === 1) {
-    const safe = toSafe(persons[0].name);
-    return 'AFFIDAVIT_' + (safe || Date.now()) + '.pdf';
-  }
-  return 'AFFIDAVIT_SESSION_' + Date.now() + '.pdf';
+  const primaryName = persons[1]?.name || persons[0]?.name || persons.find(p => p.name)?.name || '';
+  const safeName = toSafe(primaryName);
+  return (safeName || `SESSION_${Date.now()}`) + '.pdf';
+}
+
+function generateStorageFileName(fileName, ts) {
+  const asciiName = (fileName || '')
+    .normalize('NFKD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^\w.-]+/g, '_')
+    .replace(/_+/g, '_')
+    .replace(/^_+|_+$/g, '');
+
+  const safeName = asciiName && asciiName.toLowerCase() !== '.pdf'
+    ? asciiName
+    : `AFFIDAVIT_${ts}.pdf`;
+
+  return safeName.toLowerCase().endsWith('.pdf') ? safeName : `${safeName}.pdf`;
 }
 
 function generatePDF() {
@@ -606,14 +616,14 @@ function generatePDF() {
     day: '2-digit', month: '2-digit', year: 'numeric',
     hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false
   });
-  doc.setFontSize(6);
+  doc.setFontSize(9);
   plainFont();
   doc.text(`${dateStr} / SARAL CENTRE NILOKHERI`, pageW / 2, imgY + imgH + 5, { align: 'center' });
 
   // ── Table header ─────────────────────────────────────────
   let ty = imgY + imgH + 15;
 
-  doc.setFontSize(7);
+  doc.setFontSize(11);
   plainFont('bold');
   doc.text('SR.',             10,  ty);
   doc.text('NAME',            25,  ty);
@@ -626,7 +636,7 @@ function generatePDF() {
 
   // ── Rows ─────────────────────────────────────────────────
   const drawHeader = () => {
-    doc.setFontSize(7); plainFont('bold');
+    doc.setFontSize(11); plainFont('bold');
     doc.text('SR.', 10, ty);
     doc.text('NAME', 25, ty);
     doc.text('AADHAR NUMBER', 95, ty);
@@ -639,12 +649,12 @@ function generatePDF() {
     if (ty > pageH - 20) { doc.addPage(); ty = 20; drawHeader(); }
 
     // SR number
-    doc.setFontSize(7); plainFont();
+    doc.setFontSize(11); plainFont();
     doc.text(String(i + 1), 10, ty);
 
     // Name — handles pure English, pure Hindi, and mixed scripts
     const nameText = p.name.length > 32 ? p.name.substring(0, 32) : p.name;
-    doc.setFontSize(7);
+    doc.setFontSize(11);
     drawName(nameText, 25, ty);
 
     // Aadhaar (always Latin digits) — formatted as XXXX XXXX XXXX
@@ -659,7 +669,7 @@ function generatePDF() {
     doc.text('________________________', 155, ty);
 
     if (i === 0) {
-      doc.setFontSize(5); plainFont('italic');
+      doc.setFontSize(8); plainFont('italic');
       doc.text('Advocate/Numberdar/Sarpanch/Panch', 25, ty + 4);
       ty += 13;
     } else {
@@ -721,9 +731,10 @@ function generatePrintHTML() {
     font-weight: bold;
   }
   * { margin:0; padding:0; box-sizing:border-box; }
+  html { font-size: 14px; }
   body {
     font-family: 'NotoDevanagari', 'Nirmala UI', 'Mangal', sans-serif;
-    font-size: 8pt; color: #000;
+    font-size: 14px; color: #000;
     padding: 18mm 14mm 14mm;
   }
   .photo {
@@ -731,9 +742,9 @@ function generatePrintHTML() {
     object-fit: cover; margin: 0 auto 4mm;
   }
   .centre-line {
-    text-align: center; font-size: 6pt; color: #333; margin-bottom: 10mm;
+    text-align: center; font-size: 11px; color: #333; margin-bottom: 10mm;
   }
-  table { width: 100%; border-collapse: collapse; font-size: 7.5pt; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
   thead th {
     text-align: left; font-weight: bold; padding: 0 2mm 2mm 0;
     border-bottom: 0.6pt solid #000;
@@ -742,7 +753,7 @@ function generatePrintHTML() {
   .td-name { width: 72mm; padding: 2.5mm 2mm; vertical-align: top; }
   .td-aadh { width: 48mm; padding: 2.5mm 2mm; vertical-align: top; letter-spacing: 0.5pt; }
   .td-sig  { padding: 2.5mm 2mm; vertical-align: bottom; border-bottom: 0.5pt solid #000; }
-  .role    { font-size: 5.5pt; font-style: italic; font-weight: normal; margin-top: 1.5mm; }
+  .role    { font-size: 10px; font-style: italic; font-weight: normal; margin-top: 1.5mm; }
   .row-first td { padding-bottom: 5mm; }
   .footer-line {
     position: fixed; bottom: 10mm; left: 14mm; right: 14mm;
@@ -798,11 +809,8 @@ async function handlePrint() {
   try {
     const fileName = generateFileName();
 
-    // ── 1. Open HTML print view — perfect Hindi rendering ──────────────
-    const html     = generatePrintHTML();
-    const htmlBlob = new Blob([html], { type: 'text/html;charset=utf-8' });
-    const htmlUrl  = URL.createObjectURL(htmlBlob);
-    const printWin = window.open(htmlUrl, '_blank');
+    // Open a popup immediately so browsers do not block it, then load print HTML after save.
+    const printWin = window.open('', '_blank');
 
     if (!printWin) {
       showToast('Pop-up blocked. Please allow pop-ups and try again.', 'warning');
@@ -811,17 +819,38 @@ async function handlePrint() {
       return;
     }
 
-    setTimeout(() => URL.revokeObjectURL(htmlUrl), 120000);
+    printWin.document.write(`<!DOCTYPE html><html><head><title>Preparing print</title></head>
+      <body style="font-family:Arial,sans-serif;padding:24px;">Preparing print...</body></html>`);
+    printWin.document.close();
 
-    // ── 2. Save PDF copy to Supabase (async, after print opens) ────────
     showStatus('Saving to admin dashboard…', 'info');
-    const doc     = generatePDF();
-    const pdfBlob = doc.output('blob');
-    const result  = await saveToSupabase(pdfBlob, fileName);
+
+    let pdfBlob = null;
+    let pdfError = null;
+    try {
+      const doc = generatePDF();
+      pdfBlob = doc.output('blob');
+    } catch (err) {
+      pdfError = err;
+      console.error('PDF render error:', err);
+    }
+
+    const result = await saveToSupabase(pdfBlob, fileName, { pdfError });
+
+    const html     = generatePrintHTML();
+    const htmlBlob = new Blob([html], { type: 'text/html;charset=utf-8' });
+    const htmlUrl  = URL.createObjectURL(htmlBlob);
+    printWin.location.href = htmlUrl;
+    setTimeout(() => URL.revokeObjectURL(htmlUrl), 120000);
 
     if (result.success) {
       hideStatus();
-      showToast('Document saved to admin dashboard and print dialog opened.', 'success');
+      showToast(
+        result.pdfSaved
+          ? 'Document saved to admin dashboard and print dialog opened.'
+          : 'Entries saved to admin dashboard. PDF copy failed, but print opened.',
+        result.pdfSaved ? 'success' : 'warning'
+      );
     } else {
       const errDetail = result.error?.message || JSON.stringify(result.error) || 'Unknown error';
       showStatus(`Save failed: ${errDetail}`, 'error');
@@ -840,40 +869,81 @@ async function handlePrint() {
 /* =====================================================================
    SUPABASE SAVE
    ===================================================================== */
-async function saveToSupabase(pdfBlob, fileName) {
+let anonWriteDb = null;
+
+function getAnonWriteDb() {
+  if (!anonWriteDb) {
+    anonWriteDb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+      auth: {
+        autoRefreshToken: false,
+        detectSessionInUrl: false,
+        persistSession: false,
+        storageKey: 'saral-anon-writer',
+      },
+    });
+  }
+  return anonWriteDb;
+}
+
+function makeUuid() {
+  if (window.crypto?.randomUUID) return window.crypto.randomUUID();
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+    const r = Math.random() * 16 | 0;
+    const v = c === 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+}
+
+async function writeWithFallback(run) {
+  const anonDb = getAnonWriteDb();
+  const first = await run(anonDb);
+  if (!first?.error) return first;
+
+  console.warn('Anonymous write failed, retrying with signed-in session:', first.error);
+  return run(db);
+}
+
+async function saveToSupabase(pdfBlob, fileName, options = {}) {
   try {
     // Always fetch the live authenticated user — never rely on stale state
     const { data: { user: liveUser } } = await db.auth.getUser();
     if (!liveUser) throw new Error('Not logged in. Please sign in and try again.');
 
     const ts        = Date.now();
-    const pdfPath   = `sessions/${ts}_${fileName}`;
-    const photoName = fileName.replace(/\.pdf$/i, '') + '_photo.jpg';
+    const sessionId = makeUuid();
+    const storageFileName = generateStorageFileName(fileName, ts);
+    const pdfPath   = pdfBlob ? `sessions/${ts}_${storageFileName}` : null;
+    const photoName = storageFileName.replace(/\.pdf$/i, '') + '_photo.jpg';
     const photoPath = `photos/${ts}_${photoName}`;
+    let pdfUrl = null;
 
-    // 1. Upload PDF
-    const { error: pdfErr } = await db.storage
-      .from('affidavit-pdfs')
-      .upload(pdfPath, pdfBlob, { contentType: 'application/pdf', upsert: false });
-    if (pdfErr) throw pdfErr;
+    // 1. Upload PDF when rendering succeeded. Entries still save if Hindi PDF rendering fails.
+    if (pdfBlob) {
+      const pdfUpload = await writeWithFallback(client => client.storage
+        .from('affidavit-pdfs')
+        .upload(pdfPath, pdfBlob, { contentType: 'application/pdf', upsert: false }));
+      if (pdfUpload.error) throw pdfUpload.error;
 
-    const { data: { publicUrl: pdfUrl } } = db.storage
-      .from('affidavit-pdfs').getPublicUrl(pdfPath);
+      const { data: { publicUrl } } = db.storage
+        .from('affidavit-pdfs').getPublicUrl(pdfPath);
+      pdfUrl = publicUrl;
+    }
 
     // 2. Upload photo
     const photoBlob = dataURLtoBlob(state.sessionPhoto);
-    const { error: photoErr } = await db.storage
+    const photoUpload = await writeWithFallback(client => client.storage
       .from('affidavit-photos')
-      .upload(photoPath, photoBlob, { contentType: 'image/jpeg', upsert: false });
-    if (photoErr) throw photoErr;
+      .upload(photoPath, photoBlob, { contentType: 'image/jpeg', upsert: false }));
+    if (photoUpload.error) throw photoUpload.error;
 
     const { data: { publicUrl: photoUrl } } = db.storage
       .from('affidavit-photos').getPublicUrl(photoPath);
 
     // 3. Insert session record (tagged with logged-in user's ID)
-    const { data: session, error: sessErr } = await db
+    const sessionInsert = await writeWithFallback(client => client
       .from('affidavit_sessions')
       .insert({
+        id:                sessionId,
         file_name:         fileName,
         pdf_path:          pdfPath,
         pdf_url:           pdfUrl,
@@ -882,26 +952,26 @@ async function saveToSupabase(pdfBlob, fileName) {
         first_entry_name:  persons[0]?.name  || '',
         second_entry_name: persons[1]?.name  || '',
         total_entries:     persons.length,
-        status:            'SAVED',
+        status:            pdfBlob ? 'SAVED' : 'PDF_FAILED',
         operator_name:     resolveUsername(liveUser.email),
         user_id:           liveUser.id,
-      })
-      .select()
-      .single();
-    if (sessErr) throw sessErr;
+      }));
+    if (sessionInsert.error) throw sessionInsert.error;
 
     // 4. Insert entry records
     const entries = persons.map((p, i) => ({
-      session_id:    session.id,
+      session_id:    sessionId,
       serial_number: i + 1,
       name:          p.name,
       aadhaar_number: (p.aadhaar && p.aadhaar.trim() !== '') ? p.aadhaar : null,
     }));
 
-    const { error: entErr } = await db.from('affidavit_entries').insert(entries);
-    if (entErr) throw entErr;
+    const entriesInsert = await writeWithFallback(client => client
+      .from('affidavit_entries')
+      .insert(entries));
+    if (entriesInsert.error) throw entriesInsert.error;
 
-    return { success: true };
+    return { success: true, pdfSaved: Boolean(pdfBlob), pdfError: options.pdfError || null };
 
   } catch (err) {
     console.error('Supabase save error:', err);

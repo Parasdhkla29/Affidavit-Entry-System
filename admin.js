@@ -156,6 +156,14 @@ function applyFilters() {
 }
 
 /* ── Render table ───────────────────────────────────────────────────── */
+function displayFileName(session) {
+  const rawName = (session.file_name || '').trim();
+  if (rawName && rawName.toLowerCase() !== '.pdf') return rawName;
+
+  const fallbackName = (session.first_entry_name || session.second_entry_name || 'SESSION').trim();
+  return `${fallbackName || 'SESSION'}.pdf`;
+}
+
 function renderSessionsTable(sessions) {
   if (!sessions.length) {
     $a('sessionsBody').innerHTML = `
@@ -174,13 +182,14 @@ function renderSessionsTable(sessions) {
   $a('sessionsBody').innerHTML = sessions.map((s, i) => {
     const statusClass = s.status === 'SAVED' ? 'saved' : 'failed';
     const dateStr     = formatDate(s.created_at);
+    const fileName    = displayFileName(s);
     const pdfBtn      = s.pdf_url
       ? `<a class="btn-dl" href="${escHtml(s.pdf_url)}" target="_blank" onclick="event.stopPropagation()">⬇ PDF</a>`
       : '<span style="color:var(--text-3);font-size:11px;">No PDF</span>';
 
     return `<tr onclick="viewSession('${s.id}')">
       <td class="td-num">${i + 1}</td>
-      <td class="td-file" title="${escHtml(s.file_name || '')}">${escHtml(s.file_name || '—')}</td>
+      <td class="td-file" title="${escHtml(fileName)}">${escHtml(fileName)}</td>
       <td class="td-date">${dateStr}</td>
       <td class="td-name">${escHtml(s.first_entry_name || '—')}</td>
       <td class="td-name">${escHtml(s.second_entry_name || '—')}</td>
@@ -204,7 +213,8 @@ async function viewSession(sessionId) {
   const session = allSessions.find(s => s.id === sessionId);
   if (!session) return;
 
-  $a('modalTitle').textContent = session.file_name || 'Session Details';
+  const fileName = displayFileName(session);
+  $a('modalTitle').textContent = fileName || 'Session Details';
   $a('modalBody').innerHTML    = '<p style="color:var(--text-2);text-align:center;padding:40px;">Loading entries…</p>';
   $a('sessionModal').classList.remove('hidden');
 
@@ -228,7 +238,20 @@ async function viewSession(sessionId) {
     ? `<a href="${escHtml(session.pdf_url)}" target="_blank">Open / Download PDF ↗</a>`
     : '—';
 
-  const entryRows = entries.map(e => {
+  const modalEntries = entries.length ? entries : [
+    session.first_entry_name ? {
+      serial_number: 1,
+      name: session.first_entry_name,
+      aadhaar_number: null,
+    } : null,
+    session.second_entry_name ? {
+      serial_number: 2,
+      name: session.second_entry_name,
+      aadhaar_number: null,
+    } : null,
+  ].filter(Boolean);
+
+  const entryRows = modalEntries.map(e => {
     const raw = e.aadhaar_number || '';
     const aadhaarDisplay = raw
       ? raw.replace(/(\d{4})(\d{4})(\d{4})/, '$1 $2 $3')
@@ -246,7 +269,7 @@ async function viewSession(sessionId) {
     <div class="modal-meta">
       <div class="meta-item">
         <span class="meta-label">File Name</span>
-        <span class="meta-value">${escHtml(session.file_name || '—')}</span>
+        <span class="meta-value">${escHtml(fileName || '—')}</span>
       </div>
       <div class="meta-item">
         <span class="meta-label">Created</span>
