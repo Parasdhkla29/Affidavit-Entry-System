@@ -256,7 +256,7 @@ function handleAddPerson() {
     return;
   }
 
-  const name    = nameInput().value.trim().replace(/[a-z]/g, c => c.toUpperCase());
+  const name    = normalizeName(nameInput().value);
   const aadhaar = aadhaarInput().value.trim();
 
   const isFirst = state.editingIndex !== null
@@ -357,13 +357,14 @@ function renderEntries() {
 
   const rows = persons.map((p, i) => {
     const editing  = state.editingIndex === i;
+    const displayName = normalizeName(p.name);
     const aadhaarDisplay = p.aadhaar
       ? p.aadhaar.replace(/(\d{4})(\d{4})(\d{4})/, '$1 $2 $3')
       : (i === 0 ? '—' : '');
 
     return `<tr class="${editing ? 'editing' : ''}">
       <td class="td-num">${i + 1}</td>
-      <td class="td-name">${escHtml(p.name)}</td>
+      <td class="td-name">${escHtml(displayName)}</td>
       <td class="td-aadh">${aadhaarDisplay}</td>
       <td class="td-acts">
         <div class="td-acts-wrap">
@@ -447,6 +448,13 @@ function escHtml(s) {
   return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 
+function normalizeName(value) {
+  return (value || '')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .replace(/[a-z]/g, c => c.toUpperCase());
+}
+
 /* ── New Session ────────────────────────────────────────────────────── */
 function confirmNewSession() {
   if (persons.length > 0 || state.sessionPhoto) {
@@ -523,7 +531,7 @@ function generateFileName() {
     .substring(0, 100);
 
   const primaryName = persons[1]?.name || persons[0]?.name || persons.find(p => p.name)?.name || '';
-  const safeName = toSafe(primaryName);
+  const safeName = toSafe(normalizeName(primaryName));
   return (safeName || `SESSION_${Date.now()}`) + '.pdf';
 }
 
@@ -694,12 +702,13 @@ function generatePrintHTML(options = {}) {
 
   const rows = persons.map((p, i) => {
     const aadhaarCell = (i === 0 && !p.aadhaar) ? '' : fmtAadhaar(p.aadhaar);
+    const displayName = normalizeName(p.name);
     const roleText    = i === 0
       ? '<div class="role">Advocate/Numberdar/Sarpanch/Panch</div>'
       : '';
     return `<tr class="${i === 0 ? 'row-first' : ''}">
       <td class="td-sr">${i + 1}</td>
-      <td class="td-name"><strong>${escHtml(p.name)}</strong>${roleText}</td>
+      <td class="td-name"><strong>${escHtml(displayName)}</strong>${roleText}</td>
       <td class="td-aadh">${escHtml(aadhaarCell)}</td>
       <td class="td-sig"></td>
     </tr>`;
@@ -727,7 +736,7 @@ function generatePrintHTML(options = {}) {
   body {
     font-family: 'NotoDevanagari', 'Nirmala UI', 'Mangal', sans-serif;
     font-size: 11pt; line-height: 1.35; color: #000;
-    width: 210mm; min-height: 297mm;
+    width: 210mm; height: 297mm; overflow: hidden; position: relative;
     padding: 32mm 12mm 12mm;
     background: #fff;
   }
@@ -740,7 +749,7 @@ function generatePrintHTML(options = {}) {
   }
   table { width: 100%; border-collapse: collapse; font-size: 11pt; }
   thead th, tbody td { font-size: 11pt; line-height: 1.35; }
-  .td-name strong { font-size: 11pt; font-weight: bold; }
+  .td-name strong { font-size: 11pt; font-weight: bold; word-spacing: normal; }
   thead th {
     text-align: left; font-weight: bold; padding: 0 2mm 2mm 0;
     border-bottom: 0.6pt solid #000;
@@ -760,12 +769,13 @@ function generatePrintHTML(options = {}) {
   .role    { font-size: 8pt; font-style: italic; font-weight: normal; margin-top: 1.5mm; }
   .row-first td { padding-bottom: 5mm; }
   .footer-line {
-    position: fixed; bottom: 10mm; left: 14mm; right: 14mm;
+    position: absolute; bottom: 10mm; left: 14mm; right: 14mm;
     border-bottom: 0.7pt solid #000;
   }
   @media print {
+    html, body { width: 210mm; height: 297mm; overflow: hidden; }
     body { padding: 32mm 12mm 12mm; }
-    .footer-line { position: fixed; bottom: 8mm; left: 12mm; right: 12mm; }
+    .footer-line { bottom: 8mm; left: 12mm; right: 12mm; }
   }
 </style>
 </head>
@@ -845,6 +855,14 @@ async function renderPrintPdfBlob(fileName) {
     const pageW = 210;
     const pageH = 297;
     const pageSliceH = Math.floor(canvas.width * (pageH / pageW));
+    const onePageOverflowTolerance = Math.floor(pageSliceH * 0.03);
+
+    if (canvas.height <= pageSliceH + onePageOverflowTolerance) {
+      const imgData = canvas.toDataURL('image/jpeg', 0.95);
+      const imgH = Math.min(pageH, canvas.height * pageW / canvas.width);
+      pdf.addImage(imgData, 'JPEG', 0, 0, pageW, imgH);
+      return pdf.output('blob');
+    }
 
     for (let y = 0, page = 0; y < canvas.height; y += pageSliceH, page++) {
       const sliceH = Math.min(pageSliceH, canvas.height - y);
@@ -1026,8 +1044,8 @@ async function saveToSupabase(pdfBlob, fileName, options = {}) {
         pdf_url:           pdfUrl,
         photo_path:        photoPath,
         photo_url:         photoUrl,
-        first_entry_name:  persons[0]?.name  || '',
-        second_entry_name: persons[1]?.name  || '',
+        first_entry_name:  normalizeName(persons[0]?.name),
+        second_entry_name: normalizeName(persons[1]?.name),
         total_entries:     persons.length,
         status:            pdfBlob ? 'SAVED' : 'PDF_FAILED',
         operator_name:     resolveUsername(liveUser.email),
@@ -1039,7 +1057,7 @@ async function saveToSupabase(pdfBlob, fileName, options = {}) {
     const entries = persons.map((p, i) => ({
       session_id:    sessionId,
       serial_number: i + 1,
-      name:          p.name,
+      name:          normalizeName(p.name),
       aadhaar_number: (p.aadhaar && p.aadhaar.trim() !== '') ? p.aadhaar : null,
     }));
 
