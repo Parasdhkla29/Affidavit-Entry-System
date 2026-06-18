@@ -576,7 +576,8 @@ function generatePDF() {
     let curHindi = /[ऀ-ॿ]/.test(text.charAt(0));
 
     for (const ch of text) {
-      const chHindi = /[ऀ-ॿ]/.test(ch);
+      // Spaces inherit the current run's script so they don't break Hindi words apart
+      const chHindi = ch === ' ' ? curHindi : /[ऀ-ॿ]/.test(ch);
       if (chHindi === curHindi) {
         cur += ch;
       } else {
