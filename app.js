@@ -455,6 +455,13 @@ function normalizeName(value) {
     .replace(/[a-z]/g, c => c.toUpperCase());
 }
 
+function formatPrintName(value) {
+  return normalizeName(value)
+    .split(' ')
+    .map(word => `<span class="name-word">${escHtml(word)}</span>`)
+    .join('');
+}
+
 /* ── New Session ────────────────────────────────────────────────────── */
 function confirmNewSession() {
   if (persons.length > 0 || state.sessionPhoto) {
@@ -702,13 +709,13 @@ function generatePrintHTML(options = {}) {
 
   const rows = persons.map((p, i) => {
     const aadhaarCell = (i === 0 && !p.aadhaar) ? '' : fmtAadhaar(p.aadhaar);
-    const displayName = normalizeName(p.name);
+    const displayName = formatPrintName(p.name);
     const roleText    = i === 0
       ? '<div class="role">Advocate/Numberdar/Sarpanch/Panch</div>'
       : '';
     return `<tr class="${i === 0 ? 'row-first' : ''}">
       <td class="td-sr">${i + 1}</td>
-      <td class="td-name"><strong>${escHtml(displayName)}</strong>${roleText}</td>
+      <td class="td-name"><strong>${displayName}</strong>${roleText}</td>
       <td class="td-aadh">${escHtml(aadhaarCell)}</td>
       <td class="td-sig"></td>
     </tr>`;
@@ -749,7 +756,9 @@ function generatePrintHTML(options = {}) {
   }
   table { width: 100%; border-collapse: collapse; font-size: 11pt; }
   thead th, tbody td { font-size: 11pt; line-height: 1.35; }
-  .td-name strong { font-size: 11pt; font-weight: bold; word-spacing: normal; }
+  .td-name strong { font-size: 11pt; font-weight: bold; }
+  .name-word { display: inline-block; }
+  .name-word + .name-word { margin-left: 0.35em; }
   thead th {
     text-align: left; font-weight: bold; padding: 0 2mm 2mm 0;
     border-bottom: 0.6pt solid #000;
